@@ -1,13 +1,26 @@
-PRODUCTO CONSENTIDO · LIVE
+CENTRO DE CONTROL COMERCIAL — BLANQUEADORES
+Bodega La Guadalupana
 
-Archivos públicos:
-- index.html
-- app.js
-- styles.css
-- data.js
-- .nojekyll
+ACCESO
+Usuario: ventas
+Contraseña: ventas26
 
-Corrección principal:
-- El index carga styles.css, data.js y app.js con una versión distinta en cada apertura.
-- Esto evita que GitHub Pages o el navegador muestren datos del día anterior.
-- data.js siempre se carga antes que app.js.
+PUBLICAR EN GITHUB PAGES
+1. Extrae el contenido de esta carpeta.
+2. Sube index.html, styles.css, app.js, data.js y .nojekyll a la raíz del repositorio.
+3. En GitHub abre Settings > Pages.
+4. Selecciona Deploy from a branch.
+5. Selecciona main y la carpeta /(root).
+6. Guarda y espera a que GitHub publique la liga.
+
+ARCHIVOS
+- index.html: estructura de la aplicación.
+- styles.css: diseño responsivo, fondo oscuro, sombras, tarjetas y animaciones.
+- app.js: filtros, cálculos, gráficos y acceso.
+- data.js: datos extraídos de Venta SubTotal.
+- .nojekyll: evita procesamiento innecesario de GitHub Pages.
+
+NOTA DE SEGURIDAD
+La validación de usuario y contraseña es del lado del navegador. Sirve como barrera visual,
+pero no sustituye autenticación de servidor. Para acceso realmente restringido debe integrarse
+Supabase Auth, Vercel Authentication o un backend.
