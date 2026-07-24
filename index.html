@@ -3,169 +3,245 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#081411">
-  <meta name="description" content="Centro de control comercial de blanqueadores - Bodega La Guadalupana">
-  <title>Centro de Control · Blanqueadores</title>
+  <meta name="theme-color" content="#071511">
+  <meta name="description" content="Centro de presión y control comercial de Blanqueadores de ropa">
+  <title>BG · Centro de presión comercial</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div id="loginView" class="login-shell">
-    <div class="login-orb orb-one"></div>
-    <div class="login-orb orb-two"></div>
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
     <section class="login-card glass">
-      <div class="brand-mark"><span>BG</span></div>
-      <p class="eyebrow">Bodega La Guadalupana</p>
-      <h1>Centro de control comercial</h1>
-      <p class="login-copy">Seguimiento ejecutivo de la categoría Blanqueadores de ropa.</p>
-      <label class="field">
-        <span>Usuario</span>
-        <input id="userInput" autocomplete="username" placeholder="Usuario">
-      </label>
-      <label class="field">
-        <span>Contraseña</span>
-        <input id="passInput" type="password" autocomplete="current-password" placeholder="Contraseña">
-      </label>
-      <button id="loginBtn" class="primary-btn" type="button">
-        <span>Entrar al dashboard</span><span class="arrow">→</span>
-      </button>
+      <div class="login-brand">
+        <div class="brand-mark">BG</div>
+        <div><span>Bodega La Guadalupana</span><strong>Blanqueadores</strong></div>
+      </div>
+      <span class="login-kicker">CONTROL COMERCIAL · CORTE 23 JUL 2026</span>
+      <h1>Convierte la meta en acción diaria.</h1>
+      <p>Una vista de presión para supervisión y una vista analítica completa para Dirección.</p>
+      <label class="field"><span>Usuario</span><input id="userInput" autocomplete="username" placeholder="Usuario"></label>
+      <label class="field"><span>Contraseña</span><input id="passInput" type="password" autocomplete="current-password" placeholder="Contraseña"></label>
+      <button id="loginBtn" class="primary-btn" type="button"><span>Entrar al centro de control</span><span>→</span></button>
       <p id="loginError" class="login-error" aria-live="polite"></p>
-      <p class="login-note">Acceso de consulta para fuerza de ventas.</p>
+      <div class="login-security"><span>●</span> Acceso visual de GitHub Pages; no sustituye autenticación de servidor.</div>
     </section>
   </div>
 
-  <div id="appView" class="app-shell is-hidden">
+  <div id="appView" class="app-shell hidden">
     <aside class="sidebar">
       <div class="side-brand">
-        <div class="brand-mark small"><span>BG</span></div>
-        <div><strong>Blanqueadores</strong><small>Control comercial</small></div>
+        <div class="brand-mark small">BG</div>
+        <div><strong>Centro comercial</strong><small id="roleLabel">Supervisión</small></div>
       </div>
-      <nav class="side-nav">
-        <button class="nav-item active" data-scroll="overview"><span>◉</span>Resumen</button>
-        <button class="nav-item" data-scroll="manufacturers"><span>◆</span>Fabricantes</button>
-        <button class="nav-item" data-scroll="salesforce"><span>↗</span>Fuerza de ventas</button>
-        <button class="nav-item" data-scroll="trend"><span>≈</span>Tendencia</button>
+      <nav class="side-nav" aria-label="Secciones">
+        <button class="nav-btn active" data-section="pressure"><span>⚡</span><b>Presión de hoy</b></button>
+        <button class="nav-btn" data-section="mix"><span>◫</span><b>Fabricantes</b></button>
+        <button class="nav-btn" data-section="team"><span>↗</span><b>Fuerza de ventas</b></button>
+        <button class="nav-btn" data-section="products"><span>◇</span><b>Productos</b></button>
+        <button class="nav-btn director-only" data-section="direction"><span>⌁</span><b>Dirección</b></button>
       </nav>
-      <div class="side-foot">
-        <span class="live-dot"></span>
-        <div><strong>Base conectada</strong><small>Venta SubTotal 2026</small></div>
+      <div class="side-status">
+        <span class="status-dot"></span>
+        <div><strong>Información al día vencido</strong><small>23 de julio de 2026</small></div>
       </div>
     </aside>
 
     <main class="main">
       <header class="topbar">
         <div>
-          <p class="eyebrow">Bodega La Guadalupana · Mayoreo</p>
-          <h1>Desempeño de la categoría</h1>
-          <p class="subhead">Una sola lectura para venta, mezcla de fabricantes y ejecución comercial.</p>
+          <p class="eyebrow" id="headerEyebrow">TABLERO DE SUPERVISIÓN</p>
+          <h1 id="headerTitle">Presión comercial inmediata</h1>
+          <p id="headerSubtitle">Qué falta, quién debe reaccionar y dónde está la oportunidad.</p>
         </div>
         <div class="top-actions">
-          <div class="date-chip"><span class="pulse"></span><span id="cutLabel">Corte julio 2026</span></div>
+          <span class="cut-chip"><i></i> Corte 23 jul · 23/31 días</span>
+          <button id="profileBtn" class="profile-btn" type="button"><span id="profileInitial">C</span><b id="profileName">Clarisa</b></button>
           <button id="logoutBtn" class="icon-btn" type="button" aria-label="Cerrar sesión">↪</button>
         </div>
       </header>
 
-      <section class="filter-panel glass">
-        <div class="filter-title">
-          <span class="filter-icon">⌁</span>
-          <div><strong>Filtros de análisis</strong><small>La vista se actualiza al instante</small></div>
-        </div>
-        <label><span>Mes</span><select id="monthFilter"></select></label>
+      <section class="filters glass" aria-label="Filtros">
+        <div class="filters-intro"><span>⌁</span><div><strong>Slicers dinámicos</strong><small>Todo lo visible responde a la selección</small></div></div>
+        <label class="director-only"><span>Periodo</span><select id="periodFilter">
+          <option value="jul26">Julio 2026 al día 23</option>
+          <option value="ytd26">YTD enero–julio 2026</option>
+          <option value="year25">Año completo 2025</option>
+          <option value="compare">Comparativo ene–jul</option>
+        </select></label>
         <label><span>Fabricante</span><select id="manufacturerFilter"></select></label>
         <label><span>Grupo</span><select id="groupFilter"></select></label>
         <label><span>Vendedor</span><select id="sellerFilter"></select></label>
+        <label class="director-only"><span>Producto</span><select id="productFilter"></select></label>
         <button id="resetBtn" class="secondary-btn" type="button">Limpiar</button>
       </section>
 
-      <section id="overview" class="metrics-grid">
-        <article class="metric-card lift">
-          <div class="metric-top"><span>Venta categoría</span><span class="metric-icon">▦</span></div>
-          <strong id="totalSales">$0</strong>
-          <p id="salesContext">Venta SubTotal seleccionada</p>
-          <div class="mini-track"><i id="goalProgress"></i></div>
-        </article>
-        <article class="metric-card lift">
-          <div class="metric-top"><span>Venta participantes</span><span class="metric-icon">◎</span></div>
-          <strong id="eligibleSales">$0</strong>
-          <p id="eligibleShare">0% de la categoría</p>
-          <div class="mini-track blue"><i id="eligibleProgress"></i></div>
-        </article>
-        <article class="metric-card lift">
-          <div class="metric-top"><span>Unidades vendidas</span><span class="metric-icon">◇</span></div>
-          <strong id="unitsSold">0</strong>
-          <p id="ticketAverage">Precio medio $0</p>
-          <div class="spark-bars" id="unitsSpark"></div>
-        </article>
-        <article class="metric-card accent-card lift">
-          <div class="metric-top"><span>Ritmo vs objetivo</span><span class="metric-icon">↗</span></div>
-          <strong id="goalDelta">0%</strong>
-          <p id="goalMessage">Objetivo mensual oficial</p>
-          <span id="goalStatus" class="status-pill">En revisión</span>
-        </article>
-      </section>
+      <section id="pressureSection" class="app-section active-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">CLARISA · VISTA DE PRESIÓN</p><h2>La meta no espera al cierre</h2></div>
+          <span id="pressureState" class="state-badge danger">Acción urgente</span>
+        </div>
 
-      <section class="executive-grid">
-        <article class="panel hero-panel">
-          <div class="panel-head">
-            <div><p class="eyebrow">Pulso comercial</p><h2>Objetivo mensual vs venta real</h2></div>
-            <span id="objectiveTag" class="soft-chip">Meta $359.8 mil</span>
-          </div>
-          <div class="hero-value-row">
-            <div><span>Venta seleccionada</span><strong id="heroSales">$0</strong></div>
-            <div class="gauge-wrap">
-              <div class="gauge" id="goalGauge"><span id="gaugeValue">0%</span></div>
+        <div class="kpi-grid pressure-kpis">
+          <button class="kpi-card clickable" type="button" data-detail="eligible">
+            <span class="kpi-label">Venta del concurso</span>
+            <strong id="kpiEligible">$0</strong>
+            <small id="kpiEligibleNote">Alen + Clarasol + Clorox</small>
+            <div class="progress"><i id="kpiEligibleBar"></i></div>
+          </button>
+          <button class="kpi-card clickable" type="button" data-detail="expected">
+            <span class="kpi-label">Meta esperada al día 23</span>
+            <strong id="kpiExpected">$0</strong>
+            <small id="kpiExpectedNote">74.2% del mes transcurrido</small>
+            <span id="kpiGapBadge" class="delta-badge negative">Brecha $0</span>
+          </button>
+          <button class="kpi-card clickable" type="button" data-detail="daily">
+            <span class="kpi-label">Venta diaria necesaria</span>
+            <strong id="kpiDaily">$0</strong>
+            <small>Para alcanzar la meta en 8 días</small>
+            <span id="kpiDailyVs" class="delta-badge">vs ritmo actual</span>
+          </button>
+          <button class="kpi-card highlight clickable" type="button" data-detail="projection">
+            <span class="kpi-label">Proyección de cierre</span>
+            <strong id="kpiProjection">$0</strong>
+            <small id="kpiProjectionNote">Ritmo actual</small>
+            <span id="kpiProjectionBadge" class="delta-badge negative">0% de meta</span>
+          </button>
+        </div>
+
+        <div class="pressure-layout">
+          <article class="panel pressure-hero">
+            <div class="panel-head">
+              <div><p class="eyebrow">SEMÁFORO DE EJECUCIÓN</p><h3>Qué presionar hoy</h3></div>
+              <span id="selectedContext" class="soft-chip">Categoría completa</span>
             </div>
-          </div>
-          <div id="executiveInsight" class="insight-box"></div>
-          <div class="goal-grid">
-            <div><span>Meta Jul–Dic</span><strong id="semesterGoal">$0</strong></div>
-            <div><span>Avance acumulado</span><strong id="semesterProgress">0%</strong></div>
-            <div><span>Faltante</span><strong id="semesterGap">$0</strong></div>
-          </div>
-        </article>
+            <div id="actionHeadline" class="action-headline"></div>
+            <div id="manufacturerPressure" class="pressure-list"></div>
+          </article>
 
-        <article id="manufacturers" class="panel manufacturer-panel">
+          <article class="panel focus-panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">FOCO DE SUPERVISIÓN</p><h3>3 llamadas que mueven la aguja</h3></div>
+            </div>
+            <div id="priorityActions" class="priority-actions"></div>
+          </article>
+        </div>
+
+        <article class="panel opportunity-panel">
           <div class="panel-head">
-            <div><p class="eyebrow">Mezcla competitiva</p><h2>Fabricantes vendidos</h2></div>
-            <span class="soft-chip">Todos visibles</span>
+            <div><p class="eyebrow">PRESIÓN POR VENDEDOR</p><h3>Quién necesita intervención inmediata</h3></div>
+            <button id="showAllSellers" class="text-btn" type="button">Ver ranking completo →</button>
           </div>
-          <div id="manufacturerCards" class="manufacturer-list"></div>
-          <p class="footnote">Valenciana se conserva como venta histórica de categoría, pero se identifica como fuera del concurso.</p>
+          <div id="pressureSellerGrid" class="seller-pressure-grid"></div>
         </article>
       </section>
 
-      <section class="analysis-grid">
-        <article id="trend" class="panel chart-panel">
-          <div class="panel-head">
-            <div><p class="eyebrow">Evolución 2026</p><h2>Venta mensual por fabricante</h2></div>
-            <div id="chartLegend" class="chart-legend"></div>
-          </div>
-          <div class="chart-stage">
-            <svg id="trendChart" viewBox="0 0 820 330" role="img" aria-label="Tendencia mensual de ventas por fabricante"></svg>
-          </div>
+      <section id="mixSection" class="app-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">PESO EN LA CATEGORÍA</p><h2>Fabricantes: venta, share y objetivo</h2></div>
+          <span class="soft-chip">Valenciana visible · fuera del concurso</span>
+        </div>
+        <div class="kpi-grid compact-kpis">
+          <button class="kpi-card clickable" type="button" data-detail="category"><span class="kpi-label">Venta categoría</span><strong id="mixTotal">$0</strong><small>Incluye Valenciana</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="eligible"><span class="kpi-label">Venta elegible</span><strong id="mixEligible">$0</strong><small id="mixEligibleShare">0% de la categoría</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="valenciana"><span class="kpi-label">Peso Valenciana</span><strong id="mixValenciana">0%</strong><small>Referencia de categoría</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="mixgap"><span class="kpi-label">Brecha de mezcla</span><strong id="mixGap">0 pp</strong><small>Clarasol vs 30% objetivo</small></button>
+        </div>
+        <article class="panel share-panel">
+          <div class="panel-head"><div><p class="eyebrow">SHARE VISUAL</p><h3>Cuánto pesa cada fabricante</h3></div><span id="sharePeriod" class="soft-chip">Julio 2026</span></div>
+          <div id="shareStack" class="share-stack" aria-label="Participación por fabricante"></div>
+          <div id="manufacturerGrid" class="manufacturer-grid"></div>
         </article>
-
-        <article class="panel objective-panel">
-          <div class="panel-head">
-            <div><p class="eyebrow">Arquitectura de meta</p><h2>Avance por fabricante</h2></div>
-          </div>
-          <div id="objectiveList" class="objective-list"></div>
-        </article>
+        <div class="two-col">
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">COMPARATIVO</p><h3>Participación 2025 vs 2026</h3></div></div>
+            <div id="shareComparison" class="comparison-list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">MEZCLA DEL CONCURSO</p><h3>Real vs 10% · 30% · 60%</h3></div></div>
+            <div id="contestMix" class="objective-list"></div>
+          </article>
+        </div>
       </section>
 
-      <section id="salesforce" class="panel sellers-panel">
-        <div class="panel-head">
-          <div><p class="eyebrow">Ejecución comercial</p><h2>Ranking de fuerza de ventas</h2></div>
+      <section id="teamSection" class="app-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">FUERZA DE VENTAS</p><h2>Ranking y presión comercial</h2></div>
           <span id="sellerCount" class="soft-chip">0 vendedores</span>
         </div>
-        <div class="seller-layout">
-          <div id="sellerPodium" class="seller-podium"></div>
-          <div id="sellerRanking" class="seller-ranking"></div>
+        <div class="two-col ranking-layout">
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">PODIO</p><h3>Mayor venta elegible</h3></div></div>
+            <div id="sellerPodium" class="podium"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">RANKING EJECUTIVO</p><h3>Venta, ritmo y mezcla Clarasol</h3></div></div>
+            <div id="sellerTable" class="data-list"></div>
+          </article>
         </div>
       </section>
 
-      <footer>Dashboard estático · HTML + CSS + JavaScript · Fuente: Concurso_Clarasol(1).xlsx</footer>
+      <section id="productsSection" class="app-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">PORTAFOLIO</p><h2>Productos que explican la venta</h2></div>
+          <span id="productCount" class="soft-chip">0 productos</span>
+        </div>
+        <div class="two-col product-layout">
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">TOP PRODUCTOS</p><h3>Venta y participación</h3></div></div>
+            <div id="productTable" class="data-list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">OPORTUNIDAD</p><h3>Productos con mayor caída de ritmo</h3></div></div>
+            <div id="productOpportunity" class="opportunity-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="directionSection" class="app-section director-only">
+        <div class="section-heading">
+          <div><p class="eyebrow">DIRECCIÓN</p><h2>Detalle analítico y comparativo</h2></div>
+          <span id="directionPeriod" class="soft-chip">Julio 2026</span>
+        </div>
+        <div class="kpi-grid compact-kpis">
+          <button class="kpi-card clickable" type="button" data-detail="category"><span class="kpi-label">Venta seleccionada</span><strong id="dirSales">$0</strong><small id="dirSalesNote">Venta SubTotal</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="growth"><span class="kpi-label">Variación comparable</span><strong id="dirGrowth">0%</strong><small id="dirGrowthNote">Contra periodo 2025</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="units"><span class="kpi-label">Unidades</span><strong id="dirUnits">0</strong><small id="dirUnitValue">Valor promedio $0</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="semester"><span class="kpi-label">Avance Jul–Dic</span><strong id="dirSemester">0%</strong><small id="dirSemesterNote">Meta oficial $2.159 M</small></button>
+        </div>
+        <div class="two-col direction-main">
+          <article class="panel chart-panel">
+            <div class="panel-head"><div><p class="eyebrow">TENDENCIA</p><h3>2025 vs 2026 por mes</h3></div><div id="chartLegend" class="legend"></div></div>
+            <svg id="trendChart" viewBox="0 0 820 330" role="img" aria-label="Tendencia mensual de venta"></svg>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">LECTURA EJECUTIVA</p><h3>Qué está pasando</h3></div></div>
+            <div id="directionInsights" class="insight-list"></div>
+          </article>
+        </div>
+        <article class="panel detail-table-panel">
+          <div class="panel-head"><div><p class="eyebrow">DETALLE POR FABRICANTE</p><h3>2025, YTD 2026 y julio al corte</h3></div><button id="downloadCsvBtn" class="secondary-btn" type="button">Descargar vista CSV</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Fabricante</th><th>2025</th><th>YTD 2026</th><th>Jul-25</th><th>Jul-26</th><th>Share Jul-26</th><th>Meta Jul</th><th>Cumplimiento</th></tr></thead><tbody id="manufacturerTableBody"></tbody></table></div>
+        </article>
+      </section>
+
+      <footer>Fuente: Concurso_Clarasol(4).xlsx · Venta SubTotal · Bodega La Guadalupana · Corte al 23 de julio de 2026</footer>
     </main>
+
+    <nav class="mobile-nav" aria-label="Navegación móvil">
+      <button class="mobile-nav-btn active" data-section="pressure"><span>⚡</span><small>Presión</small></button>
+      <button class="mobile-nav-btn" data-section="mix"><span>◫</span><small>Share</small></button>
+      <button class="mobile-nav-btn" data-section="team"><span>↗</span><small>Equipo</small></button>
+      <button class="mobile-nav-btn" data-section="products"><span>◇</span><small>Productos</small></button>
+      <button class="mobile-nav-btn director-only" data-section="direction"><span>⌁</span><small>Dirección</small></button>
+    </nav>
   </div>
+
+  <div id="drawerBackdrop" class="drawer-backdrop hidden"></div>
+  <aside id="detailDrawer" class="detail-drawer" aria-hidden="true">
+    <div class="drawer-head"><div><p class="eyebrow">DETALLE RESUMIDO</p><h2 id="drawerTitle">Detalle</h2></div><button id="closeDrawer" class="icon-btn" type="button" aria-label="Cerrar detalle">×</button></div>
+    <div id="drawerContent" class="drawer-content"></div>
+  </aside>
 
   <script src="data.js"></script>
   <script src="app.js"></script>

@@ -1,26 +1,47 @@
-CENTRO DE CONTROL COMERCIAL — BLANQUEADORES
-Bodega La Guadalupana
+CENTRO DE PRESIÓN COMERCIAL — BLANQUEADORES
+Bodega La Guadalupana · Corte al 23 de julio de 2026
 
-ACCESO
+USUARIOS
+1) Supervisión
+   Usuario: alicia
+   Contraseña: alicia26
+   Vista: presión diaria, acciones prioritarias, fabricantes, vendedores y productos.
+
+2) Dirección de Ventas
+   Usuario: direccion
+   Contraseña: direccion26
+   También funciona el usuario: direccion.ventas
+   Vista: acceso completo, histórico 2025, YTD 2026, comparativos, tendencias, tablas y descarga CSV.
+
+LÓGICA DE META
+- La meta oficial del segundo semestre se mantiene en $2,159,015.89.
+- La meta mensual conjunta es $359,835.98.
+- La meta de julio se mide al día vencido: 23 de 31 días.
+- Participantes: ALEN 10%, CLARASOL 30%, CLOROX 60%.
+- VALENCIANA se conserva dentro de la venta y el share de la categoría, pero se identifica como fuera del concurso.
+- Las metas no se redistribuyen por vendedor, grupo o producto. Esos filtros muestran su contribución a la meta global.
+
+PUBLICACIÓN EN GITHUB PAGES
+1. Sustituye en la raíz del repositorio los archivos index.html, styles.css, app.js y data.js.
+2. Conserva .nojekyll.
+3. Haz commit y espera la actualización de GitHub Pages.
+4. Si el navegador mantiene la versión anterior, recarga sin caché o abre en modo incógnito.
+
+SEGURIDAD
+Las credenciales se validan en el navegador. En GitHub Pages son una barrera visual, no autenticación segura de servidor.
+Para control real de acceso se recomienda Supabase Auth, Vercel Authentication o un backend.
+
+
+ACCESOS DEFINITIVOS
+
+Supervisión:
+Usuario: clarisa
+Contraseña: clarisa26
+Perfil interno: role 'alicia'
+
+Dirección de Ventas:
 Usuario: ventas
 Contraseña: ventas26
+Perfil interno: role 'direccion'
 
-PUBLICAR EN GITHUB PAGES
-1. Extrae el contenido de esta carpeta.
-2. Sube index.html, styles.css, app.js, data.js y .nojekyll a la raíz del repositorio.
-3. En GitHub abre Settings > Pages.
-4. Selecciona Deploy from a branch.
-5. Selecciona main y la carpeta /(root).
-6. Guarda y espera a que GitHub publique la liga.
-
-ARCHIVOS
-- index.html: estructura de la aplicación.
-- styles.css: diseño responsivo, fondo oscuro, sombras, tarjetas y animaciones.
-- app.js: filtros, cálculos, gráficos y acceso.
-- data.js: datos extraídos de Venta SubTotal.
-- .nojekyll: evita procesamiento innecesario de GitHub Pages.
-
-NOTA DE SEGURIDAD
-La validación de usuario y contraseña es del lado del navegador. Sirve como barrera visual,
-pero no sustituye autenticación de servidor. Para acceso realmente restringido debe integrarse
-Supabase Auth, Vercel Authentication o un backend.
+Los accesos anteriores dejaron de estar habilitados.
