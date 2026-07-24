@@ -81,3 +81,146 @@ footer{text-align:center;color:var(--muted);font-size:9px;padding:19px 6px 4px}.
 @media(max-width:600px){.login-card{padding:25px;border-radius:25px}.login-card h1{font-size:39px}.topbar h1{font-size:36px}.profile-btn b{display:none}.section-heading{display:block}.section-heading>.soft-chip,.section-heading>.state-badge{margin-top:10px}.filters{grid-template-columns:1fr}.filters-intro{grid-column:auto}.kpi-grid{grid-template-columns:1fr}.kpi-card{min-height:142px}.pressure-kpis .kpi-card>strong{font-size:35px}.panel{padding:16px;border-radius:20px}.panel-head{display:block}.panel-head>.soft-chip,.panel-head>.text-btn,.panel-head>.secondary-btn{margin-top:10px}.seller-pressure-grid,.manufacturer-grid{grid-template-columns:1fr}.pressure-row{grid-template-columns:auto 1fr auto}.pressure-row .pressure-meter{grid-column:2/4}.share-stack{height:50px}.share-segment span{font-size:8px}.podium{min-height:210px;gap:5px}.podium-card{padding:11px 5px}.data-row{grid-template-columns:24px minmax(100px,1fr) 82px}.data-row .inline-bar,.data-row>.risk-pill{display:none}.cut-chip{font-size:9px}.detail-drawer{padding:17px}.mobile-nav{grid-template-columns:repeat(4,1fr)}body[data-role="direccion"] .mobile-nav{grid-template-columns:repeat(5,1fr)}}
 body[data-role="alicia"] .director-only{display:none!important}
 @media(max-width:920px){body[data-role="alicia"] .mobile-nav{grid-template-columns:repeat(4,1fr)}}
+
+
+/* Refinamiento ejecutivo v4 */
+.pressure-row{color:var(--text);grid-template-columns:auto minmax(240px,1.35fr) minmax(180px,.8fr) auto;gap:14px;padding:15px}
+.pressure-copy{min-width:0;text-align:left}.pressure-copy strong,.pressure-copy small{display:block}.pressure-copy strong{font-size:14px;letter-spacing:.01em}.pressure-copy small{color:#a9c2b7;font-size:10px;margin-top:4px}.pressure-copy p{margin:7px 0 0;color:#d8e7df;font-size:11px;line-height:1.42;font-weight:500}
+.pressure-meter-wrap{display:grid;gap:7px;text-align:left}.pressure-meter-wrap>small{color:var(--muted);font-size:9px}.pressure-meter{display:block;width:100%;height:9px}
+.pressure-amount strong{color:var(--text);font-size:17px}.pressure-amount .risk-pill{display:inline-flex;margin-top:7px}
+.priority-card{color:var(--text);text-align:left}.priority-card strong{color:var(--text);font-size:13px}.priority-card p{color:#b6ccc1}
+.action-headline span{color:#b6ccc1}.action-headline strong{line-height:1.25}
+.manufacturer-card{min-height:220px;display:flex;flex-direction:column}.manufacturer-card>strong{color:var(--text)}.manufacturer-card .manufacturer-share{color:#d7e7df;font-size:11px;font-weight:700}.manufacturer-narrative{color:#aac2b7!important;font-size:10px!important;line-height:1.48!important;margin-top:9px!important}.manufacturer-card footer{margin-top:auto;padding-top:14px;border-top:1px solid rgba(165,202,184,.09)}
+.row-comment{margin:8px 0 0;color:#b6ccc1;font-size:10px;line-height:1.4}.objective-row{color:var(--text);text-align:left}
+.technical-details{margin-top:16px}.technical-details>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;border:1px solid var(--line);border-radius:18px;background:rgba(16,35,29,.76);cursor:pointer;color:var(--text);transition:.22s}.technical-details>summary::-webkit-details-marker{display:none}.technical-details>summary span b,.technical-details>summary span small{display:block}.technical-details>summary span small{color:var(--muted);font-size:10px;margin-top:4px}.technical-details>summary i{font-style:normal;color:var(--lime);font-size:11px}.technical-details[open]>summary{border-color:rgba(185,244,92,.25);margin-bottom:12px}.technical-details[open]>summary i:after{content:' abierto'}.technical-details .detail-table-panel{margin-top:0}
+.login-security{letter-spacing:.01em}.login-card>p{max-width:420px}
+
+@media(max-width:1260px){.pressure-row{grid-template-columns:auto minmax(220px,1.3fr) minmax(150px,.7fr) auto}}
+@media(max-width:720px){.pressure-row{grid-template-columns:auto 1fr auto}.pressure-meter-wrap{grid-column:2/4}.pressure-copy p{font-size:10px}.pressure-amount strong{font-size:15px}.technical-details>summary{align-items:flex-start}}
+
+
+/* Refinamiento de claridad v5 */
+button{color:var(--text)}
+body.drawer-open{overflow:hidden}
+
+.login-card{width:min(440px,100%);padding:30px;border-radius:28px}
+.login-kicker{margin-top:21px}
+.login-card h1{
+  font-size:clamp(30px,5vw,40px);
+  line-height:1.06;
+  letter-spacing:-.035em;
+  margin:17px 0 9px;
+}
+.login-card>p{font-size:14px;line-height:1.48;margin-bottom:18px}
+.login-security{margin-top:4px}
+.primary-btn{margin-top:18px}
+
+.kpi-card,
+.pressure-row,
+.priority-card,
+.seller-pressure-card,
+.podium-card,
+.manufacturer-card,
+.objective-row,
+.data-row,
+.opportunity-row{
+  color:var(--text)!important;
+}
+.kpi-card strong,
+.pressure-row strong,
+.priority-card strong,
+.seller-pressure-card strong,
+.podium-card strong,
+.podium-card b,
+.manufacturer-card strong,
+.objective-row strong,
+.data-row strong,
+.opportunity-row strong{
+  color:var(--text)!important;
+}
+.podium-card{
+  background:linear-gradient(180deg,rgba(185,244,92,.09),rgba(255,255,255,.035));
+}
+.podium-card small{color:#a9c2b7!important}
+.data-name strong{font-size:12px}
+.data-value strong{font-size:12px}
+.priority-card p,
+.seller-pressure-card p,
+.row-comment{color:#bad0c5!important}
+
+.action-headline{
+  background:rgba(185,244,92,.045);
+}
+.action-headline strong{font-size:18px}
+.action-headline span{font-size:12px;line-height:1.5}
+
+.detail-drawer{
+  width:min(540px,100%);
+  padding:24px;
+  scrollbar-color:#789187 #10231d;
+}
+.drawer-head h2{
+  color:var(--text);
+  font-size:30px;
+  line-height:1.08;
+  overflow-wrap:anywhere;
+}
+.drawer-content{padding:18px 0 30px}
+.drawer-definition{
+  color:#c7d9d0;
+  font-size:13px;
+  line-height:1.52;
+  padding:13px 14px;
+  margin-bottom:14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(255,255,255,.035);
+}
+.drawer-hero{padding:18px}
+.drawer-hero span{font-size:12px;color:#abc2b7}
+.drawer-hero strong{font-size:42px;color:var(--text)}
+.drawer-hero small{display:block;color:#b4c9bf;font-size:12px;margin-top:7px}
+.drawer-section-title{
+  margin:20px 0 10px;
+  color:var(--text);
+  font-size:14px;
+  letter-spacing:.01em;
+}
+.drawer-row{padding:13px 14px;align-items:center}
+.drawer-row span{font-size:12px;color:#b5cbc0}
+.drawer-row strong{font-size:13px;color:var(--text)}
+.drawer-comparison-list{display:grid;gap:9px}
+.drawer-comparison{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:14px;
+  align-items:center;
+  padding:13px 14px;
+  border-radius:14px;
+  background:rgba(255,255,255,.035);
+}
+.drawer-comparison>div:first-child strong,
+.drawer-comparison>div:first-child small{
+  display:block;
+}
+.drawer-comparison>div:first-child strong{font-size:13px;color:var(--text)}
+.drawer-comparison>div:first-child small{font-size:11px;color:#a9c2b7;margin-top:4px}
+.drawer-comparison>div:last-child{text-align:right}
+.drawer-comparison>div:last-child span,
+.drawer-comparison>div:last-child b{display:block}
+.drawer-comparison>div:last-child span{font-size:12px;color:var(--text)}
+.drawer-comparison>div:last-child b{font-size:11px;margin-top:4px}
+.drawer-comparison .ok{color:var(--green)}
+.drawer-comparison .bad{color:var(--red)}
+.drawer-note{font-size:12px;color:#afc5ba}
+
+@media(max-width:600px){
+  .login-shell{padding:14px;align-items:start}
+  .login-card{margin-top:10px;padding:22px;border-radius:22px}
+  .login-card h1{font-size:30px}
+  .login-card>p{font-size:13px}
+  .drawer-head h2{font-size:25px}
+  .drawer-hero strong{font-size:36px}
+  .drawer-comparison{grid-template-columns:1fr}
+  .drawer-comparison>div:last-child{text-align:left}
+}

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071511">
-  <meta name="description" content="Centro de presión y control comercial de Blanqueadores de ropa">
-  <title>BG · Centro de presión comercial</title>
+  <meta name="description" content="Centro comercial ejecutivo de la categoría Blanqueadores de ropa">
+  <title>BG · Centro comercial de blanqueadores</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,14 +17,14 @@
         <div class="brand-mark">BG</div>
         <div><span>Bodega La Guadalupana</span><strong>Blanqueadores</strong></div>
       </div>
-      <span class="login-kicker">CONTROL COMERCIAL · CORTE 23 JUL 2026</span>
-      <h1>Convierte la meta en acción diaria.</h1>
-      <p>Una vista de presión para supervisión y una vista analítica completa para Dirección.</p>
+      <span class="login-kicker">DASHBOARD COMERCIAL · CORTE 23 JUL 2026</span>
+      <h1>Acceso al dashboard comercial</h1>
+      <p>Consulta ventas, metas, participación por fabricante y resultados del equipo.</p>
       <label class="field"><span>Usuario</span><input id="userInput" autocomplete="username" placeholder="Usuario"></label>
       <label class="field"><span>Contraseña</span><input id="passInput" type="password" autocomplete="current-password" placeholder="Contraseña"></label>
-      <button id="loginBtn" class="primary-btn" type="button"><span>Entrar al centro de control</span><span>→</span></button>
+      <button id="loginBtn" class="primary-btn" type="button"><span>Entrar</span><span>→</span></button>
       <p id="loginError" class="login-error" aria-live="polite"></p>
-      <div class="login-security"><span>●</span> Acceso visual de GitHub Pages; no sustituye autenticación de servidor.</div>
+      <div class="login-security"><span>●</span> Acceso interno · Bodega La Guadalupana</div>
     </section>
   </div>
 
@@ -35,11 +35,11 @@
         <div><strong>Centro comercial</strong><small id="roleLabel">Supervisión</small></div>
       </div>
       <nav class="side-nav" aria-label="Secciones">
-        <button class="nav-btn active" data-section="pressure"><span>⚡</span><b>Presión de hoy</b></button>
-        <button class="nav-btn" data-section="mix"><span>◫</span><b>Fabricantes</b></button>
-        <button class="nav-btn" data-section="team"><span>↗</span><b>Fuerza de ventas</b></button>
-        <button class="nav-btn" data-section="products"><span>◇</span><b>Productos</b></button>
-        <button class="nav-btn director-only" data-section="direction"><span>⌁</span><b>Dirección</b></button>
+        <button class="nav-btn active" data-section="pressure"><span>◉</span><b>Resumen</b></button>
+        <button class="nav-btn" data-section="mix"><span>◫</span><b>Participación</b></button>
+        <button class="nav-btn" data-section="team"><span>↗</span><b>Equipo comercial</b></button>
+        <button class="nav-btn" data-section="products"><span>◇</span><b>Portafolio</b></button>
+        <button class="nav-btn director-only" data-section="direction"><span>⌁</span><b>Análisis</b></button>
       </nav>
       <div class="side-status">
         <span class="status-dot"></span>
@@ -50,9 +50,9 @@
     <main class="main">
       <header class="topbar">
         <div>
-          <p class="eyebrow" id="headerEyebrow">TABLERO DE SUPERVISIÓN</p>
-          <h1 id="headerTitle">Presión comercial inmediata</h1>
-          <p id="headerSubtitle">Qué falta, quién debe reaccionar y dónde está la oportunidad.</p>
+          <p class="eyebrow" id="headerEyebrow">RESULTADOS AL CORTE</p>
+          <h1 id="headerTitle">Resumen comercial al 23 de julio</h1>
+          <p id="headerSubtitle">Venta real, meta, proyección y distribución por fabricante.</p>
         </div>
         <div class="top-actions">
           <span class="cut-chip"><i></i> Corte 23 jul · 23/31 días</span>
@@ -62,7 +62,7 @@
       </header>
 
       <section class="filters glass" aria-label="Filtros">
-        <div class="filters-intro"><span>⌁</span><div><strong>Slicers dinámicos</strong><small>Todo lo visible responde a la selección</small></div></div>
+        <div class="filters-intro"><span>⌁</span><div><strong>Filtros de lectura</strong><small>La selección actualiza toda la información</small></div></div>
         <label class="director-only"><span>Periodo</span><select id="periodFilter">
           <option value="jul26">Julio 2026 al día 23</option>
           <option value="ytd26">YTD enero–julio 2026</option>
@@ -78,33 +78,33 @@
 
       <section id="pressureSection" class="app-section active-section">
         <div class="section-heading">
-          <div><p class="eyebrow">CLARISA · VISTA DE PRESIÓN</p><h2>La meta no espera al cierre</h2></div>
-          <span id="pressureState" class="state-badge danger">Acción urgente</span>
+          <div><p class="eyebrow">RESUMEN AL 23 DE JULIO</p><h2>Venta actual, meta y proyección</h2></div>
+          <span id="pressureState" class="state-badge danger">Requiere atención</span>
         </div>
 
         <div class="kpi-grid pressure-kpis">
           <button class="kpi-card clickable" type="button" data-detail="eligible">
-            <span class="kpi-label">Venta del concurso</span>
+            <span class="kpi-label">Venta del concurso al corte</span>
             <strong id="kpiEligible">$0</strong>
-            <small id="kpiEligibleNote">Alen + Clarasol + Clorox</small>
+            <small id="kpiEligibleNote">Venta real de Alen + Clarasol + Clorox</small>
             <div class="progress"><i id="kpiEligibleBar"></i></div>
           </button>
           <button class="kpi-card clickable" type="button" data-detail="expected">
-            <span class="kpi-label">Meta esperada al día 23</span>
+            <span class="kpi-label">Venta esperada al 23 de julio</span>
             <strong id="kpiExpected">$0</strong>
-            <small id="kpiExpectedNote">74.2% del mes transcurrido</small>
+            <small id="kpiExpectedNote">Meta mensual proporcional a 23 días</small>
             <span id="kpiGapBadge" class="delta-badge negative">Brecha $0</span>
           </button>
           <button class="kpi-card clickable" type="button" data-detail="daily">
             <span class="kpi-label">Venta diaria necesaria</span>
             <strong id="kpiDaily">$0</strong>
-            <small>Para alcanzar la meta en 8 días</small>
+            <small>Promedio requerido del 24 al 31 de julio</small>
             <span id="kpiDailyVs" class="delta-badge">vs ritmo actual</span>
           </button>
           <button class="kpi-card highlight clickable" type="button" data-detail="projection">
-            <span class="kpi-label">Proyección de cierre</span>
+            <span class="kpi-label">Proyección de cierre de julio</span>
             <strong id="kpiProjection">$0</strong>
-            <small id="kpiProjectionNote">Ritmo actual</small>
+            <small id="kpiProjectionNote">Estimación con el ritmo actual</small>
             <span id="kpiProjectionBadge" class="delta-badge negative">0% de meta</span>
           </button>
         </div>
@@ -112,7 +112,7 @@
         <div class="pressure-layout">
           <article class="panel pressure-hero">
             <div class="panel-head">
-              <div><p class="eyebrow">SEMÁFORO DE EJECUCIÓN</p><h3>Qué presionar hoy</h3></div>
+              <div><p class="eyebrow">RESULTADO POR FABRICANTE</p><h3>Venta actual y participación</h3></div>
               <span id="selectedContext" class="soft-chip">Categoría completa</span>
             </div>
             <div id="actionHeadline" class="action-headline"></div>
@@ -121,7 +121,7 @@
 
           <article class="panel focus-panel">
             <div class="panel-head">
-              <div><p class="eyebrow">FOCO DE SUPERVISIÓN</p><h3>3 llamadas que mueven la aguja</h3></div>
+              <div><p class="eyebrow">ALERTAS COMERCIALES</p><h3>Prioridades de seguimiento</h3></div>
             </div>
             <div id="priorityActions" class="priority-actions"></div>
           </article>
@@ -129,7 +129,7 @@
 
         <article class="panel opportunity-panel">
           <div class="panel-head">
-            <div><p class="eyebrow">PRESIÓN POR VENDEDOR</p><h3>Quién necesita intervención inmediata</h3></div>
+            <div><p class="eyebrow">SEGUIMIENTO COMERCIAL</p><h3>Vendedores con mayor oportunidad</h3></div>
             <button id="showAllSellers" class="text-btn" type="button">Ver ranking completo →</button>
           </div>
           <div id="pressureSellerGrid" class="seller-pressure-grid"></div>
@@ -138,27 +138,27 @@
 
       <section id="mixSection" class="app-section">
         <div class="section-heading">
-          <div><p class="eyebrow">PESO EN LA CATEGORÍA</p><h2>Fabricantes: venta, share y objetivo</h2></div>
-          <span class="soft-chip">Valenciana visible · fuera del concurso</span>
+          <div><p class="eyebrow">PARTICIPACIÓN POR FABRICANTE</p><h2>Distribución de la venta de la categoría</h2></div>
+          <span class="soft-chip">Valenciana incluida · fuera de la meta</span>
         </div>
         <div class="kpi-grid compact-kpis">
-          <button class="kpi-card clickable" type="button" data-detail="category"><span class="kpi-label">Venta categoría</span><strong id="mixTotal">$0</strong><small>Incluye Valenciana</small></button>
-          <button class="kpi-card clickable" type="button" data-detail="eligible"><span class="kpi-label">Venta elegible</span><strong id="mixEligible">$0</strong><small id="mixEligibleShare">0% de la categoría</small></button>
-          <button class="kpi-card clickable" type="button" data-detail="valenciana"><span class="kpi-label">Peso Valenciana</span><strong id="mixValenciana">0%</strong><small>Referencia de categoría</small></button>
-          <button class="kpi-card clickable" type="button" data-detail="mixgap"><span class="kpi-label">Brecha de mezcla</span><strong id="mixGap">0 pp</strong><small>Clarasol vs 30% objetivo</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="category"><span class="kpi-label">Venta total de categoría</span><strong id="mixTotal">$0</strong><small>Incluye Valenciana</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="eligible"><span class="kpi-label">Venta de fabricantes con meta</span><strong id="mixEligible">$0</strong><small id="mixEligibleShare">0% de la categoría</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="valenciana"><span class="kpi-label">Participación Valenciana</span><strong id="mixValenciana">0%</strong><small>Referencia de categoría</small></button>
+          <button class="kpi-card clickable" type="button" data-detail="mixgap"><span class="kpi-label">Brecha de Clarasol</span><strong id="mixGap">0 pp</strong><small>Clarasol vs 30% objetivo</small></button>
         </div>
         <article class="panel share-panel">
-          <div class="panel-head"><div><p class="eyebrow">SHARE VISUAL</p><h3>Cuánto pesa cada fabricante</h3></div><span id="sharePeriod" class="soft-chip">Julio 2026</span></div>
+          <div class="panel-head"><div><p class="eyebrow">DISTRIBUCIÓN ACTUAL</p><h3>Venta y peso de cada fabricante</h3></div><span id="sharePeriod" class="soft-chip">Julio 2026</span></div>
           <div id="shareStack" class="share-stack" aria-label="Participación por fabricante"></div>
           <div id="manufacturerGrid" class="manufacturer-grid"></div>
         </article>
         <div class="two-col">
           <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">COMPARATIVO</p><h3>Participación 2025 vs 2026</h3></div></div>
+            <div class="panel-head"><div><p class="eyebrow">EVOLUCIÓN DE PARTICIPACIÓN</p><h3>Cómo cambió el peso de cada fabricante</h3></div></div>
             <div id="shareComparison" class="comparison-list"></div>
           </article>
           <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">MEZCLA DEL CONCURSO</p><h3>Real vs 10% · 30% · 60%</h3></div></div>
+            <div class="panel-head"><div><p class="eyebrow">MEZCLA OBJETIVO</p><h3>Fabricantes con meta: real vs objetivo</h3></div></div>
             <div id="contestMix" class="objective-list"></div>
           </article>
         </div>
@@ -166,16 +166,16 @@
 
       <section id="teamSection" class="app-section">
         <div class="section-heading">
-          <div><p class="eyebrow">FUERZA DE VENTAS</p><h2>Ranking y presión comercial</h2></div>
+          <div><p class="eyebrow">RESULTADOS POR VENDEDOR</p><h2>Venta y participación del equipo</h2></div>
           <span id="sellerCount" class="soft-chip">0 vendedores</span>
         </div>
         <div class="two-col ranking-layout">
           <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">PODIO</p><h3>Mayor venta elegible</h3></div></div>
+            <div class="panel-head"><div><p class="eyebrow">PODIO</p><h3>Mayor venta del concurso</h3></div></div>
             <div id="sellerPodium" class="podium"></div>
           </article>
           <article class="panel">
-            <div class="panel-head"><div><p class="eyebrow">RANKING EJECUTIVO</p><h3>Venta, ritmo y mezcla Clarasol</h3></div></div>
+            <div class="panel-head"><div><p class="eyebrow">DETALLE DEL EQUIPO</p><h3>Venta del concurso y participación Clarasol</h3></div></div>
             <div id="sellerTable" class="data-list"></div>
           </article>
         </div>
@@ -183,7 +183,7 @@
 
       <section id="productsSection" class="app-section">
         <div class="section-heading">
-          <div><p class="eyebrow">PORTAFOLIO</p><h2>Productos que explican la venta</h2></div>
+          <div><p class="eyebrow">PORTAFOLIO</p><h2>Productos que mueven la categoría</h2></div>
           <span id="productCount" class="soft-chip">0 productos</span>
         </div>
         <div class="two-col product-layout">
@@ -200,7 +200,7 @@
 
       <section id="directionSection" class="app-section director-only">
         <div class="section-heading">
-          <div><p class="eyebrow">DIRECCIÓN</p><h2>Detalle analítico y comparativo</h2></div>
+          <div><p class="eyebrow">ANÁLISIS EJECUTIVO</p><h2>Contexto, tendencia y causas</h2></div>
           <span id="directionPeriod" class="soft-chip">Julio 2026</span>
         </div>
         <div class="kpi-grid compact-kpis">
@@ -219,27 +219,30 @@
             <div id="directionInsights" class="insight-list"></div>
           </article>
         </div>
-        <article class="panel detail-table-panel">
-          <div class="panel-head"><div><p class="eyebrow">DETALLE POR FABRICANTE</p><h3>2025, YTD 2026 y julio al corte</h3></div><button id="downloadCsvBtn" class="secondary-btn" type="button">Descargar vista CSV</button></div>
-          <div class="table-wrap"><table><thead><tr><th>Fabricante</th><th>2025</th><th>YTD 2026</th><th>Jul-25</th><th>Jul-26</th><th>Share Jul-26</th><th>Meta Jul</th><th>Cumplimiento</th></tr></thead><tbody id="manufacturerTableBody"></tbody></table></div>
-        </article>
+        <details class="technical-details">
+          <summary><span><b>Detalle técnico por fabricante</b><small>2025, YTD 2026 y julio al corte</small></span><i>Ver detalle</i></summary>
+          <article class="panel detail-table-panel">
+            <div class="panel-head"><div><p class="eyebrow">DETALLE TÉCNICO</p><h3>Cifras de soporte para Dirección</h3></div><button id="downloadCsvBtn" class="secondary-btn" type="button">Descargar CSV</button></div>
+            <div class="table-wrap"><table><thead><tr><th>Fabricante</th><th>2025</th><th>YTD 2026</th><th>Jul-25</th><th>Jul-26</th><th>Participación Jul-26</th><th>Meta Jul</th><th>Cumplimiento</th></tr></thead><tbody id="manufacturerTableBody"></tbody></table></div>
+          </article>
+        </details>
       </section>
 
       <footer>Fuente: Concurso_Clarasol(4).xlsx · Venta SubTotal · Bodega La Guadalupana · Corte al 23 de julio de 2026</footer>
     </main>
 
     <nav class="mobile-nav" aria-label="Navegación móvil">
-      <button class="mobile-nav-btn active" data-section="pressure"><span>⚡</span><small>Presión</small></button>
-      <button class="mobile-nav-btn" data-section="mix"><span>◫</span><small>Share</small></button>
+      <button class="mobile-nav-btn active" data-section="pressure"><span>◉</span><small>Resumen</small></button>
+      <button class="mobile-nav-btn" data-section="mix"><span>◫</span><small>Participación</small></button>
       <button class="mobile-nav-btn" data-section="team"><span>↗</span><small>Equipo</small></button>
-      <button class="mobile-nav-btn" data-section="products"><span>◇</span><small>Productos</small></button>
-      <button class="mobile-nav-btn director-only" data-section="direction"><span>⌁</span><small>Dirección</small></button>
+      <button class="mobile-nav-btn" data-section="products"><span>◇</span><small>Portafolio</small></button>
+      <button class="mobile-nav-btn director-only" data-section="direction"><span>⌁</span><small>Análisis</small></button>
     </nav>
   </div>
 
   <div id="drawerBackdrop" class="drawer-backdrop hidden"></div>
   <aside id="detailDrawer" class="detail-drawer" aria-hidden="true">
-    <div class="drawer-head"><div><p class="eyebrow">DETALLE RESUMIDO</p><h2 id="drawerTitle">Detalle</h2></div><button id="closeDrawer" class="icon-btn" type="button" aria-label="Cerrar detalle">×</button></div>
+    <div class="drawer-head"><div><p class="eyebrow">DETALLE DE LA CIFRA</p><h2 id="drawerTitle">Detalle</h2></div><button id="closeDrawer" class="icon-btn" type="button" aria-label="Cerrar detalle">×</button></div>
     <div id="drawerContent" class="drawer-content"></div>
   </aside>
 

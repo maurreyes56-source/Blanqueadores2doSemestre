@@ -45,3 +45,24 @@ Contraseña: ventas26
 Perfil interno: role 'direccion'
 
 Los accesos anteriores dejaron de estar habilitados.
+
+
+VERSIÓN REFINADA V4
+- Ambos perfiles ingresan al Resumen comercial.
+- Clarisa conserva role: alicia y ve la operación al corte.
+- Ventas conserva role: direccion y dispone del módulo Análisis.
+- Se reemplazó el lenguaje de presión por lectura ejecutiva y prioridades.
+- Los comentarios de participación explican peso, objetivo y acción.
+- El detalle técnico está plegado para mantener una experiencia tipo app.
+
+
+CAMBIOS V5
+- Se eliminaron eslóganes y textos publicitarios.
+- “Venta elegible” ahora se presenta como “Venta del concurso”.
+- Las cuatro tarjetas principales distinguen:
+  1) venta real al corte,
+  2) venta esperada al corte,
+  3) venta diaria necesaria,
+  4) proyección de cierre.
+- Cada tarjeta abre un detalle específico; la proyección ya no muestra cifras reales como si fueran proyectadas.
+- Se mejoró el contraste de textos, botones, podio, ranking y panel lateral.

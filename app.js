@@ -7,8 +7,8 @@
   const monthNames = {ene:'Enero',feb:'Febrero',mar:'Marzo',abr:'Abril',may:'Mayo',jun:'Junio',jul:'Julio',ago:'Agosto',sep:'Septiembre',oct:'Octubre',nov:'Noviembre',dic:'Diciembre'};
   const colors = { ALEN:'#64b4ff', CLARASOL:'#b9f45c', CLOROX:'#62d69a', VALENCIANA:'#ffc861' };
   const users = {
-    clarisa: { password:'clarisa26', role:'alicia', name:'Clarisa', label:'Supervisora comercial' },
-    ventas: { password:'ventas26', role:'direccion', name:'Dirección Ventas', label:'Vista directiva' }
+    clarisa: { password:'clarisa26', role:'alicia', name:'Clarisa', label:'Supervisión comercial' },
+    ventas: { password:'ventas26', role:'direccion', name:'Dirección Ventas', label:'Dirección comercial' }
   };
 
   const state = {
@@ -125,53 +125,72 @@
   function renderPressure(){
     const rows = julyRows(2026);
     const total = sum(rows);
-    const eligible = currentContestActual(rows);
+    const contestSales = currentContestActual(rows);
     const target = targetContext();
-    const actualDaily = eligible / goals.cutoff.day;
-    const projection = actualDaily * goals.cutoff.daysInMonth;
-    const requiredDaily = target.target===null ? 0 : Math.max(target.target-eligible,0)/Math.max(daysRemaining,1);
-    const expectedProgress = target.expected ? eligible/target.expected : null;
-    const fullProgress = target.target ? eligible/target.target : null;
-    const gap = target.expected===null ? null : target.expected-eligible;
+    const currentDaily = contestSales / goals.cutoff.day;
+    const projectedClose = currentDaily * goals.cutoff.daysInMonth;
+    const requiredDaily = target.target===null ? 0 : Math.max(target.target-contestSales,0)/Math.max(daysRemaining,1);
+    const expectedProgress = target.expected ? contestSales/target.expected : null;
+    const projectedProgress = target.target ? projectedClose/target.target : null;
+    const gapToDate = target.expected===null ? null : target.expected-contestSales;
 
-    $('kpiEligible').textContent = fmt(eligible);
-    $('kpiEligibleNote').textContent = state.manufacturer==='VALENCIANA' ? 'Venta de categoría · fuera del concurso' : hasDimensionalFilter() ? 'Contribución filtrada a la meta global' : 'Alen + Clarasol + Clorox';
+    $('kpiEligible').textContent = fmt(contestSales);
+    $('kpiEligibleNote').textContent = state.manufacturer==='VALENCIANA'
+      ? 'Venta de Valenciana; se muestra fuera de la meta'
+      : hasDimensionalFilter()
+        ? 'Venta real de la selección dentro de Alen, Clarasol y Clorox'
+        : 'Venta real de Alen + Clarasol + Clorox';
     $('kpiEligibleBar').style.width = `${Math.min((expectedProgress||0)*100,100)}%`;
+
     $('kpiExpected').textContent = target.expected===null ? 'Sin meta' : fmt(target.expected);
-    $('kpiExpectedNote').textContent = target.expected===null ? 'Se muestra como referencia de categoría' : `${pct(dayRatio)} del mes transcurrido · ${target.label}`;
-    $('kpiGapBadge').textContent = gap===null ? 'Fuera del concurso' : gap>0 ? `Brecha ${fmt(gap)}` : `Arriba ${fmt(Math.abs(gap))}`;
-    $('kpiGapBadge').className = `delta-badge ${gap!==null && gap<=0?'positive':'negative'}`;
+    $('kpiExpectedNote').textContent = target.expected===null
+      ? 'Valenciana no tiene meta asignada'
+      : hasDimensionalFilter()
+        ? 'Referencia de la meta global al día 23'
+        : 'Meta mensual proporcional a 23 de 31 días';
+    $('kpiGapBadge').textContent = gapToDate===null
+      ? 'Fuera de la meta'
+      : gapToDate>0 ? `Faltan ${fmt(gapToDate)}` : `Supera por ${fmt(Math.abs(gapToDate))}`;
+    $('kpiGapBadge').className = `delta-badge ${gapToDate!==null && gapToDate<=0?'positive':'negative'}`;
+
     $('kpiDaily').textContent = target.target===null ? '—' : fmt(requiredDaily);
-    $('kpiDailyVs').textContent = target.target===null ? 'Sin objetivo asignado' : `${requiredDaily > actualDaily ? '+' : ''}${pct(actualDaily ? requiredDaily/actualDaily-1 : 1)} vs ritmo actual`;
-    $('kpiDailyVs').className = `delta-badge ${target.target!==null && requiredDaily<=actualDaily?'positive':'negative'}`;
-    $('kpiProjection').textContent = fmt(projection);
-    $('kpiProjectionNote').textContent = `Ritmo actual ${fmt(actualDaily)} por día`;
-    $('kpiProjectionBadge').textContent = target.target===null ? 'Referencia de categoría' : `${pct(fullProgress)} de meta mensual`;
-    $('kpiProjectionBadge').className = `delta-badge ${target.target!==null && projection>=target.target?'positive':'negative'}`;
+    $('kpiDailyVs').textContent = target.target===null
+      ? 'No aplica'
+      : requiredDaily<=currentDaily
+        ? 'El ritmo actual alcanza'
+        : `Requiere ${pct(requiredDaily/Math.max(currentDaily,1)-1)} más por día`;
+    $('kpiDailyVs').className = `delta-badge ${target.target!==null && requiredDaily<=currentDaily?'positive':'negative'}`;
+
+    $('kpiProjection').textContent = fmt(projectedClose);
+    $('kpiProjectionNote').textContent = `Estimación al 31 de julio con ${fmt(currentDaily)} diarios`;
+    $('kpiProjectionBadge').textContent = target.target===null
+      ? 'Fuera de la meta'
+      : `Proyecta ${pct(projectedProgress)} de la meta mensual`;
+    $('kpiProjectionBadge').className = `delta-badge ${target.target!==null && projectedClose>=target.target?'positive':'negative'}`;
     $('selectedContext').textContent = contextLabel();
 
-    let stateClass='danger', stateText='Acción urgente';
-    if(expectedProgress===null){ stateClass='warning'; stateText='Fuera del concurso'; }
-    else if(expectedProgress>=.95){ stateClass='good'; stateText='En ritmo'; }
-    else if(expectedProgress>=.75){ stateClass='warning'; stateText='Presionar hoy'; }
+    let stateClass='danger', stateText='Debajo de lo esperado';
+    if(expectedProgress===null){ stateClass='warning'; stateText='Sin meta asignada'; }
+    else if(expectedProgress>=.95){ stateClass='good'; stateText='En línea con el corte'; }
+    else if(expectedProgress>=.75){ stateClass='warning'; stateText='Cerca del ritmo esperado'; }
     $('pressureState').className=`state-badge ${stateClass}`;
     $('pressureState').textContent=stateText;
 
     const clarasol = sum(rows.filter(r=>r.fabricante==='CLARASOL'));
-    const eligibleAll = sum(rows.filter(r=>participants.has(r.fabricante)));
-    const clarasolMix = eligibleAll ? clarasol/eligibleAll : 0;
+    const contestAll = sum(rows.filter(r=>participants.has(r.fabricante)));
+    const clarasolMix = contestAll ? clarasol/contestAll : 0;
     let headlineTitle, headlineText;
     if(target.target===null){
-      headlineTitle = `Valenciana pesa ${pct(total ? eligible/total : 0)} en la selección.`;
-      headlineText = 'Debe permanecer visible para entender la categoría, pero su venta no acredita cumplimiento del concurso.';
+      headlineTitle = `Venta actual de Valenciana: ${fmt(contestSales)}.`;
+      headlineText = 'Forma parte de la categoría, pero no se compara contra la meta del concurso.';
     } else if(expectedProgress>=1){
-      headlineTitle = `La selección está ${fmt(eligible-target.expected)} arriba del ritmo esperado.`;
-      headlineText = `No aflojar: Clarasol representa ${pct(clarasolMix)} de la mezcla elegible frente al 30% objetivo.`;
+      headlineTitle = `La venta del concurso cumple el nivel esperado al día 23.`;
+      headlineText = `Clarasol representa ${pct(clarasolMix)} de la venta del concurso frente al 30% objetivo.`;
     } else {
-      headlineTitle = `Faltan ${fmt(Math.max(target.expected-eligible,0))} para estar al ritmo del día 23.`;
-      headlineText = `El cierre proyectado es ${fmt(projection)}. Para alcanzar la meta se requieren ${fmt(requiredDaily)} diarios en los 8 días restantes.`;
+      headlineTitle = `Venta real ${fmt(contestSales)} frente a ${fmt(target.expected)} esperados al día 23.`;
+      headlineText = `Faltan ${fmt(Math.max(target.expected-contestSales,0))} para estar al ritmo del corte. La proyección de julio es ${fmt(projectedClose)}.`;
     }
-    $('actionHeadline').innerHTML=`<strong>${headlineTitle}</strong><span>${headlineText}${hasDimensionalFilter()?' La meta oficial no se redistribuye por vendedor, grupo o producto; la vista representa su contribución.':''}</span>`;
+    $('actionHeadline').innerHTML=`<strong>${headlineTitle}</strong><span>${headlineText}${hasDimensionalFilter()?' La selección muestra su aporte; la meta continúa siendo global.':''}</span>`;
 
     renderManufacturerPressure();
     renderPriorityActions();
@@ -183,6 +202,24 @@
     const total = sum(rows);
     const eligible = sum(rows.filter(r=>participants.has(r.fabricante)));
     const makers = state.manufacturer==='TODOS' ? ['ALEN','CLARASOL','CLOROX','VALENCIANA'] : [state.manufacturer];
+
+    function executiveComment(m, mixShare, categoryShare, ratio){
+      if(m==='VALENCIANA') return `Aporta ${pct(categoryShare)} de la categoría. Se vigila, pero no suma al concurso.`;
+      const target=goals.shareObjetivo[m];
+      const diff=mixShare-target;
+      if(m==='CLARASOL'){
+        if(diff>=0) return `Alcanza ${pct(mixShare)} de la venta del concurso y cumple el 30% objetivo. El reto es sostener volumen.`;
+        return `Pesa ${pct(mixShare)} de la venta del concurso. Necesita ganar ${Math.abs(diff*100).toFixed(1)} pp para llegar al 30%.`;
+      }
+      if(m==='CLOROX'){
+        if(diff>=0) return `Sostiene ${pct(mixShare)} de la venta del concurso, ${Math.abs(diff*100).toFixed(1)} pp sobre el 60%. Debe protegerse.`;
+        return `Pesa ${pct(mixShare)} de la venta del concurso. Recuperar volumen sin frenar el crecimiento de Clarasol.`;
+      }
+      if(diff>=0 && ratio<.95) return `Aporta ${pct(mixShare)} de la venta del concurso, arriba del 10%; falta acelerar el volumen del mes.`;
+      if(diff>=0) return `Cumple su peso objetivo con ${pct(mixShare)} de la venta del concurso. Mantener ejecución.`;
+      return `Pesa ${pct(mixShare)} de la venta del concurso. Le faltan ${Math.abs(diff*100).toFixed(1)} pp para su objetivo.`;
+    }
+
     $('manufacturerPressure').innerHTML = makers.map(m=>{
       const actual=sum(rows.filter(r=>r.fabricante===m));
       const outside=!participants.has(m);
@@ -190,12 +227,17 @@
       const ratio=expected?actual/expected:0;
       const categoryShare=total?actual/total:0;
       const mixShare=participants.has(m)&&eligible?actual/eligible:0;
-      const status=outside?'Fuera concurso':ratio>=.95?'En ritmo':ratio>=.70?'Presionar':'Urgente';
-      const statusClass=outside?'press':ratio>=.95?'good':ratio>=.70?'press':'urgent';
+      let status, statusClass;
+      if(outside){ status='Referencia'; statusClass='press'; }
+      else if(ratio>=.95){ status='En ritmo'; statusClass='good'; }
+      else if(m==='CLARASOL' && mixShare<goals.shareObjetivo[m]){ status='Ganar participación'; statusClass='urgent'; }
+      else if(m==='CLOROX' && mixShare>=goals.shareObjetivo[m]){ status='Proteger'; statusClass='press'; }
+      else { status='Acelerar'; statusClass=ratio>=.7?'press':'urgent'; }
+      const comment=executiveComment(m,mixShare,categoryShare,ratio);
       return `<button type="button" class="pressure-row clickable" data-maker="${m}">
         <span class="maker-icon" style="background:${colors[m]}">${m.slice(0,2)}</span>
-        <span class="pressure-name"><strong>${m}</strong><small>${outside?`${pct(categoryShare)} de la categoría`:`${pct(mixShare)} de mezcla · objetivo ${pct(goals.shareObjetivo[m])}`}</small></span>
-        <span class="pressure-meter"><i style="width:${outside?Math.min(categoryShare*100,100):Math.min(ratio*100,100)}%;background:${colors[m]}"></i></span>
+        <span class="pressure-copy"><strong>${m}</strong><small>${outside?`${pct(categoryShare)} de la categoría`:`${pct(mixShare)} de la venta del concurso · objetivo ${pct(goals.shareObjetivo[m])}`}</small><p>${comment}</p></span>
+        <span class="pressure-meter-wrap"><small>${outside?'Peso en categoría':`Avance de venta al corte ${pct(ratio)}`}</small><span class="pressure-meter"><i style="width:${outside?Math.min(categoryShare*100,100):Math.min(ratio*100,100)}%;background:${colors[m]}"></i></span></span>
         <span class="pressure-amount"><strong>${fmt(actual)}</strong><small class="risk-pill ${statusClass}">${status}</small></span>
       </button>`;
     }).join('');
@@ -219,9 +261,9 @@
       const mixIndex=clarasolShare/.30;
       const score=.55*Math.min(pace,1.4)+.45*Math.min(mixIndex,1.4);
       let status='Bien',statusClass='good',action='Sostener el ritmo y mejorar mezcla.';
-      if(eligible===0){status='Urgente';statusClass='urgent';action='Activar venta de fabricantes participantes hoy.';}
-      else if(score<.65){status='Urgente';statusClass='urgent';action=clarasolShare<.15?`Abrir Clarasol: solo ${pct(clarasolShare)} de su mezcla.`:`Recuperar ritmo: ${pct(1-pace)} debajo de Jul-25 diario.`;}
-      else if(score<1){status='Presionar';statusClass='press';action=clarasolShare<.30?`Subir Clarasol hacia 30%; hoy está en ${pct(clarasolShare)}.`:cloroxPace<.9?'Proteger Clorox mientras crece Clarasol.':'Acelerar volumen elegible.';}
+      if(eligible===0){status='Atención';statusClass='urgent';action='Activar venta de fabricantes con meta.';}
+      else if(score<.65){status='Atención';statusClass='urgent';action=clarasolShare<.15?`Desarrollar Clarasol: hoy representa ${pct(clarasolShare)} de su venta del concurso.`:`Recuperar ritmo: ${pct(1-pace)} debajo de Jul-25 diario.`;}
+      else if(score<1){status='Seguimiento';statusClass='press';action=clarasolShare<.30?`Llevar Clarasol hacia 30%; hoy representa ${pct(clarasolShare)}.`:cloroxPace<.9?'Proteger Clorox mientras crece Clarasol.':'Acelerar volumen elegible.';}
       return {seller,eligible,eligiblePrev,pace,clarasolShare,cloroxPace,score,status,statusClass,action,category:sum(cur)};
     }).sort((a,b)=>a.score-b.score || a.eligible-b.eligible);
   }
@@ -230,10 +272,10 @@
     const stats=sellerPressureStats();
     const chosen=[];
     const add=(obj,type,title,text)=>{if(obj && !chosen.some(x=>x.seller===obj.seller)) chosen.push({...obj,type,title,text});};
-    add(stats.filter(s=>s.eligible>0).sort((a,b)=>a.clarasolShare-b.clarasolShare)[0],'Mezcla', 'Subir Clarasol', sText(stats.filter(s=>s.eligible>0).sort((a,b)=>a.clarasolShare-b.clarasolShare)[0],'clarasol'));
-    add(stats.slice().sort((a,b)=>a.pace-b.pace)[0],'Ritmo','Recuperar venta',sText(stats.slice().sort((a,b)=>a.pace-b.pace)[0],'pace'));
-    add(stats.filter(s=>s.eligible>0).sort((a,b)=>a.cloroxPace-b.cloroxPace)[0],'Protección','Cuidar Clorox',sText(stats.filter(s=>s.eligible>0).sort((a,b)=>a.cloroxPace-b.cloroxPace)[0],'clorox'));
-    for(const s of stats){ if(chosen.length>=3) break; add(s,'Acción','Presionar cartera',s.action); }
+    add(stats.filter(s=>s.eligible>0).sort((a,b)=>a.clarasolShare-b.clarasolShare)[0],'Participación', 'Desarrollar Clarasol', sText(stats.filter(s=>s.eligible>0).sort((a,b)=>a.clarasolShare-b.clarasolShare)[0],'clarasol'));
+    add(stats.slice().sort((a,b)=>a.pace-b.pace)[0],'Ritmo','Recuperar ritmo',sText(stats.slice().sort((a,b)=>a.pace-b.pace)[0],'pace'));
+    add(stats.filter(s=>s.eligible>0).sort((a,b)=>a.cloroxPace-b.cloroxPace)[0],'Protección','Sostener Clorox',sText(stats.filter(s=>s.eligible>0).sort((a,b)=>a.cloroxPace-b.cloroxPace)[0],'clorox'));
+    for(const s of stats){ if(chosen.length>=3) break; add(s,'Seguimiento','Revisar cartera',s.action); }
     $('priorityActions').innerHTML=chosen.slice(0,3).map((x,i)=>`<button type="button" class="priority-card" data-seller="${encodeURIComponent(x.seller)}">
       <header><span class="priority-index">${i+1}</span><span>${x.type}</span></header>
       <strong>${esc(shortSeller(x.seller))}</strong><p>${esc(x.text)}</p>
@@ -242,9 +284,9 @@
 
   function sText(s,type){
     if(!s) return 'Sin información suficiente para esta selección.';
-    if(type==='clarasol') return `Clarasol pesa ${pct(s.clarasolShare)} de su venta elegible. La referencia del concurso es 30%.`;
-    if(type==='pace') return s.eligiblePrev>0 ? `Su ritmo diario está ${pct(Math.abs(s.pace-1))} ${s.pace>=1?'arriba':'debajo'} de julio 2025.` : 'No tiene base comparable suficiente; revisar activación de cartera.';
-    return s.cloroxPace<1 ? `El ritmo diario de Clorox está ${pct(1-s.cloroxPace)} debajo de julio 2025.` : 'Mantener Clorox mientras se abre espacio incremental para Clarasol.';
+    if(type==='clarasol') return s.clarasolShare>=.30 ? `Clarasol ya representa ${pct(s.clarasolShare)} de su venta del concurso. Sostener volumen.` : `Clarasol representa ${pct(s.clarasolShare)}. Enfocar clientes con potencial para acercarse al 30%.`;
+    if(type==='pace') return s.eligiblePrev>0 ? `Su ritmo diario está ${pct(Math.abs(s.pace-1))} ${s.pace>=1?'arriba':'debajo'} de julio 2025. Revisar cartera prioritaria.` : 'Sin base comparable suficiente. Confirmar activación de cartera.';
+    return s.cloroxPace<1 ? `Clorox está ${pct(1-s.cloroxPace)} debajo del ritmo de julio 2025. Recuperarlo sin sustituirlo por Clarasol.` : 'Clorox mantiene el ritmo. Crecer Clarasol de forma incremental.';
   }
 
   function renderPressureSellers(){
@@ -252,7 +294,7 @@
     $('pressureSellerGrid').innerHTML=stats.slice(0,4).map(s=>`<button type="button" class="seller-pressure-card" data-seller="${encodeURIComponent(s.seller)}">
       <header><h4>${esc(shortSeller(s.seller))}</h4><span class="risk-pill ${s.statusClass}">${s.status}</span></header>
       <strong>${fmt(s.eligible)}</strong><p>${esc(s.action)}</p>
-      <div class="mini-metrics"><span>Ritmo vs 2025<b>${pct(s.pace-1)}</b></span><span>Mix Clarasol<b>${pct(s.clarasolShare)}</b></span></div>
+      <div class="mini-metrics"><span>Ritmo vs 2025<b>${pct(s.pace-1)}</b></span><span>Participación Clarasol<b>${pct(s.clarasolShare)}</b></span></div>
     </button>`).join('') || '<p class="drawer-note">Sin información para la selección.</p>';
   }
 
@@ -282,25 +324,34 @@
     $('manufacturerGrid').innerHTML=makers.map(m=>{
       const actual=currentMap[m], share=total?actual/total:0, prev=priorMap[m], growth=prev?actual/prev-1:null;
       const outside=!participants.has(m);
+      const eligibleShare=eligible&&participants.has(m)?actual/eligible:0;
+      let narrative;
+      if(outside) narrative=`Representa ${pct(share)} de la categoría. Se conserva como referencia, sin acreditar meta.`;
+      else if(m==='CLARASOL') narrative=eligibleShare>=.30?`Cumple la participación objetivo con ${pct(eligibleShare)}.`:`Está en ${pct(eligibleShare)} de la venta del concurso; faltan ${Math.abs((eligibleShare-.30)*100).toFixed(1)} pp para el 30%.`;
+      else if(m==='CLOROX') narrative=`Sostiene ${pct(eligibleShare)} de la venta del concurso. Debe protegerse mientras crece Clarasol.`;
+      else narrative=`Aporta ${pct(eligibleShare)} de la venta del concurso frente al 10% objetivo.`;
       return `<button type="button" class="manufacturer-card" data-maker="${m}">
-        <header><span style="background:${colors[m]}">${m.slice(0,2)}</span><small>${outside?'FUERA DEL CONCURSO':'PARTICIPANTE'}</small></header>
-        <strong>${fmt(actual)}</strong><p>${pct(share)} de la categoría</p>
-        <footer><span>${growth===null?'Sin comparable':`${pct(growth)} vs comparable`}</span><span>${outside?'Referencia':`Obj. mix ${pct(goals.shareObjetivo[m])}`}</span></footer>
+        <header><span style="background:${colors[m]}">${m.slice(0,2)}</span><small>${outside?'REFERENCIA DE CATEGORÍA':'PARTICIPANTE'}</small></header>
+        <strong>${fmt(actual)}</strong><p class="manufacturer-share">${pct(share)} de la categoría</p>
+        <p class="manufacturer-narrative">${narrative}</p>
+        <footer><span>${growth===null?'Sin comparable':`${pct(growth)} vs comparable`}</span><span>${outside?'No suma a meta':`Objetivo ${pct(goals.shareObjetivo[m])}`}</span></footer>
       </button>`;
     }).join('');
 
     $('shareComparison').innerHTML=makers.map(m=>{
-      const c=total?currentMap[m]/total:0, p=priorTotal?priorMap[m]/priorTotal:0;
-      return `<div class="comparison-row"><header><strong>${m}</strong><span>${pp(c-p)}</span></header>
+      const c=total?currentMap[m]/total:0, p=priorTotal?priorMap[m]/priorTotal:0, change=c-p;
+      const interpretation=Math.abs(change)<.005?'Participación estable':change>0?`Gana ${Math.abs(change*100).toFixed(1)} pp de peso`:`Cede ${Math.abs(change*100).toFixed(1)} pp de peso`;
+      return `<div class="comparison-row"><header><strong>${m}</strong><span>${pp(change)}</span></header>
         <div class="dual-bar"><i style="width:${Math.min(p*100,100)}%;background:rgba(255,255,255,.24)"></i><i style="width:${Math.min(c*100,100)}%;background:${colors[m]}"></i></div>
-        <div class="comparison-meta"><span>Anterior ${pct(p)}</span><span>Actual ${pct(c)}</span></div></div>`;
+        <div class="comparison-meta"><span>Antes ${pct(p)}</span><span>Ahora ${pct(c)}</span></div><p class="row-comment">${interpretation}</p></div>`;
     }).join('');
 
     $('contestMix').innerHTML=goals.participantes.map(m=>{
-      const actual=currentMap[m], real=eligible?actual/eligible:0, target=goals.shareObjetivo[m], index=target?real/target:0;
-      return `<button type="button" class="objective-row" data-maker="${m}"><header><strong>${m}</strong><span>${pp(real-target)}</span></header>
+      const actual=currentMap[m], real=eligible?actual/eligible:0, target=goals.shareObjetivo[m], index=target?real/target:0, diff=real-target;
+      const note=Math.abs(diff)<.01?'Mezcla alineada al objetivo':diff>0?`${Math.abs(diff*100).toFixed(1)} pp por arriba del objetivo`:`${Math.abs(diff*100).toFixed(1)} pp por debajo del objetivo`;
+      return `<button type="button" class="objective-row" data-maker="${m}"><header><strong>${m}</strong><span>${pp(diff)}</span></header>
         <div class="objective-track"><i style="width:${Math.min(index*100,100)}%;background:${colors[m]}"></i></div>
-        <div class="objective-meta"><span>Real ${pct(real)}</span><span>Objetivo ${pct(target)}</span></div></button>`;
+        <div class="objective-meta"><span>Real ${pct(real)}</span><span>Objetivo ${pct(target)}</span></div><p class="row-comment">${note}</p></button>`;
     }).join('');
   }
 
@@ -399,8 +450,8 @@
     const eligMix=eligible?clarasol/eligible:0, total=cat26||1;
     const cards=[
       {cls:eligibleProjection>=goals.metaMensual?'good':'alert',title:'Proyección del concurso',text:`El ritmo actual proyecta ${fmt(eligibleProjection)} al cierre, ${eligibleProjection>=goals.metaMensual?'por arriba':'por debajo'} de la meta mensual de ${fmt(goals.metaMensual)}.`},
-      {cls:eligMix>=.30?'good':'alert',title:'Clarasol aún no alcanza la mezcla',text:`Clarasol representa ${pct(eligMix)} de la venta elegible; el objetivo es 30%. La brecha es ${pp(eligMix-.30)}.`},
-      {cls:'good',title:'Clorox sostiene el volumen',text:`Clorox registra ${fmt(clorox)} y concentra ${pct(eligible?clorox/eligible:0)} de la mezcla elegible. El crecimiento de Clarasol debe ser incremental, no sustitución de Clorox.`},
+      {cls:eligMix>=.30?'good':'alert',title:'Clarasol aún no alcanza la participación objetivo',text:`Clarasol representa ${pct(eligMix)} de la venta del concurso; el objetivo es 30%. La brecha es ${pp(eligMix-.30)}.`},
+      {cls:'good',title:'Clorox sostiene el volumen',text:`Clorox registra ${fmt(clorox)} y concentra ${pct(eligible?clorox/eligible:0)} de la mezcla del concurso. El crecimiento de Clarasol debe ser incremental, no sustitución de Clorox.`},
       {cls:'',title:'Valenciana sigue explicando categoría',text:`Valenciana aporta ${fmt(valenciana)}, equivalente a ${pct(valenciana/total)} de julio. Se mantiene visible, aunque no acredita la meta.`},
       {cls:catProjection>=cat25?'good':'alert',title:'Categoría vs julio 2025',text:`La categoría proyecta ${fmt(catProjection)} frente a ${fmt(cat25)} de julio 2025: ${pct(cat25?catProjection/cat25-1:0)}.`}
     ];
@@ -439,39 +490,79 @@
     $('drawerBackdrop').classList.remove('hidden');
     $('detailDrawer').classList.add('open');
     $('detailDrawer').setAttribute('aria-hidden','false');
+    document.body.classList.add('drawer-open');
   }
   function closeDrawer(){
     $('detailDrawer').classList.remove('open');
     $('detailDrawer').setAttribute('aria-hidden','true');
     $('drawerBackdrop').classList.add('hidden');
+    document.body.classList.remove('drawer-open');
   }
 
   function openMakerDetail(maker){
-    const rows=julyRows(2026,{manufacturer:maker}), prior=julyRows(2025,{manufacturer:maker});
-    const actual=sum(rows), previous=sum(prior), projected=actual/goals.cutoff.day*goals.cutoff.daysInMonth;
+    const rows=julyRows(2026,{manufacturer:maker});
+    const prior=julyRows(2025,{manufacturer:maker});
+    const allRows=julyRows(2026,{manufacturer:'TODOS'});
+    const actual=sum(rows);
+    const previous=sum(prior);
+    const projected=actual/goals.cutoff.day*goals.cutoff.daysInMonth;
+    const totalCategory=sum(allRows);
+    const contestTotal=sum(allRows.filter(r=>participants.has(r.fabricante)));
     const target=participants.has(maker)?goals.metaMensualFabricante[maker]:null;
     const expected=target?target*dayRatio:null;
-    openDrawer(maker,`<div class="drawer-hero"><span>Venta julio al día 23</span><strong>${fmt(actual)}</strong></div>
+    const shareBase=participants.has(maker)?contestTotal:totalCategory;
+    const share=shareBase?actual/shareBase:0;
+
+    openDrawer(maker,`
+      <div class="drawer-definition">${participants.has(maker)
+        ? 'Este detalle muestra la venta real del fabricante al 23 de julio, su meta y su proyección.'
+        : 'Este detalle muestra la venta real de Valenciana dentro de la categoría. No tiene meta asignada.'}</div>
+      <div class="drawer-hero">
+        <span>Venta real al 23 de julio</span>
+        <strong>${fmt(actual)}</strong>
+        <small>${participants.has(maker)?`${pct(share)} de la venta del concurso`:`${pct(share)} de la categoría`}</small>
+      </div>
       <div class="drawer-list">
-        <div class="drawer-row"><span>Proyección de cierre</span><strong>${fmt(projected)}</strong></div>
+        <div class="drawer-row"><span>Proyección al 31 de julio</span><strong>${fmt(projected)}</strong></div>
         <div class="drawer-row"><span>Julio 2025</span><strong>${fmt(previous)}</strong></div>
-        <div class="drawer-row"><span>Variación de ritmo proyectada</span><strong>${previous?pct(projected/previous-1):'—'}</strong></div>
-        <div class="drawer-row"><span>Meta esperada al corte</span><strong>${expected?fmt(expected):'Fuera del concurso'}</strong></div>
-        <div class="drawer-row"><span>Cumplimiento al tiempo</span><strong>${expected?pct(actual/expected):'—'}</strong></div>
-      </div><p class="drawer-note">Principales vendedores</p><div class="drawer-list">${breakdownRows(rows,'vendedor')}</div>
-      <p class="drawer-note">Principales productos</p><div class="drawer-list">${breakdownRows(rows,'item')}</div>`);
+        <div class="drawer-row"><span>Variación proyectada vs julio 2025</span><strong>${previous?pct(projected/previous-1):'Sin base'}</strong></div>
+        <div class="drawer-row"><span>Venta esperada al día 23</span><strong>${expected?fmt(expected):'No aplica'}</strong></div>
+        <div class="drawer-row"><span>Cumplimiento al corte</span><strong>${expected?pct(actual/expected):'No aplica'}</strong></div>
+      </div>
+      <h3 class="drawer-section-title">Principales vendedores</h3>
+      <div class="drawer-list">${breakdownRows(rows,'vendedor')}</div>
+      <h3 class="drawer-section-title">Principales productos</h3>
+      <div class="drawer-list">${breakdownRows(rows,'item')}</div>`);
   }
 
   function openSellerDetail(seller){
-    const rows=julyRows(2026,{seller}), prior=julyRows(2025,{seller});
-    const category=sum(rows), eligible=sum(rows.filter(r=>participants.has(r.fabricante))), prev=sum(prior.filter(r=>participants.has(r.fabricante)));
+    const rows=julyRows(2026,{seller});
+    const prior=julyRows(2025,{seller});
+    const category=sum(rows);
+    const contestRows=rows.filter(r=>participants.has(r.fabricante));
+    const contestSales=sum(contestRows);
+    const priorContest=sum(prior.filter(r=>participants.has(r.fabricante)));
     const clarasol=sum(rows.filter(r=>r.fabricante==='CLARASOL'));
-    openDrawer(shortSeller(seller),`<div class="drawer-hero"><span>Venta elegible julio</span><strong>${fmt(eligible)}</strong></div>
-      <div class="drawer-list"><div class="drawer-row"><span>Venta total categoría</span><strong>${fmt(category)}</strong></div>
-      <div class="drawer-row"><span>Ritmo diario vs Jul-25</span><strong>${prev?pct((eligible/goals.cutoff.day)/(prev/goals.cutoff.daysInMonth)-1):'Sin base'}</strong></div>
-      <div class="drawer-row"><span>Mix Clarasol</span><strong>${pct(eligible?clarasol/eligible:0)} · objetivo 30%</strong></div></div>
-      <p class="drawer-note">Mezcla por fabricante</p><div class="drawer-list">${breakdownRows(rows,'fabricante')}</div>
-      <p class="drawer-note">Productos principales</p><div class="drawer-list">${breakdownRows(rows,'item')}</div>
+    const dailyChange=priorContest
+      ? (contestSales/goals.cutoff.day)/(priorContest/goals.cutoff.daysInMonth)-1
+      : null;
+
+    openDrawer(shortSeller(seller),`
+      <div class="drawer-definition">La cifra principal es la venta real del vendedor en Alen, Clarasol y Clorox al 23 de julio.</div>
+      <div class="drawer-hero">
+        <span>Venta del concurso al 23 de julio</span>
+        <strong>${fmt(contestSales)}</strong>
+        <small>Alen + Clarasol + Clorox</small>
+      </div>
+      <div class="drawer-list">
+        <div class="drawer-row"><span>Venta total de la categoría</span><strong>${fmt(category)}</strong></div>
+        <div class="drawer-row"><span>Ritmo diario vs julio 2025</span><strong>${dailyChange===null?'Sin base':pct(dailyChange)}</strong></div>
+        <div class="drawer-row"><span>Participación de Clarasol</span><strong>${pct(contestSales?clarasol/contestSales:0)} · objetivo 30%</strong></div>
+      </div>
+      <h3 class="drawer-section-title">Distribución real por fabricante</h3>
+      <div class="drawer-list">${breakdownRows(rows,'fabricante')}</div>
+      <h3 class="drawer-section-title">Productos principales</h3>
+      <div class="drawer-list">${breakdownRows(rows,'item')}</div>
       <button type="button" class="drawer-action" id="filterDrawerSeller">Filtrar toda la app por este vendedor</button>`);
     setTimeout(()=>{const b=$('filterDrawerSeller');if(b)b.onclick=()=>{state.seller=seller;$('sellerFilter').value=seller;closeDrawer();renderAll();};},0);
   }
@@ -487,27 +578,150 @@
   }
 
   function openGenericDetail(type){
-    const rows=julyRows(2026), total=sum(rows), eligible=currentContestActual(rows), target=targetContext();
-    const makerBreakdown=breakdownRows(rows,'fabricante');
-    const sellerBreakdown=breakdownRows(rows,'vendedor');
-    const definitions={
-      category:['Venta total de categoría',total,'Incluye todos los fabricantes vendidos, incluida Valenciana.'],
-      eligible:['Venta elegible del concurso',eligible,'Incluye Alen, Clarasol y Clorox. Valenciana permanece visible, pero no acredita cumplimiento.'],
-      expected:['Meta esperada al corte',target.expected,'La meta mensual se prorratea a 23 de 31 días. No se redistribuye por vendedor, grupo o producto.'],
-      daily:['Venta diaria necesaria',target.target===null?0:Math.max(target.target-eligible,0)/daysRemaining,'Ritmo requerido en los ocho días restantes para alcanzar la meta mensual oficial.'],
-      projection:['Proyección de cierre',eligible/goals.cutoff.day*goals.cutoff.daysInMonth,'Proyección lineal con el ritmo promedio observado del 1 al 23 de julio.'],
-      valenciana:['Peso de Valenciana',sum(rows.filter(r=>r.fabricante==='VALENCIANA')),'Se muestra para comprender la categoría, aunque está fuera del concurso.'],
-      mixgap:['Brecha de mezcla Clarasol',(sum(rows.filter(r=>r.fabricante==='CLARASOL'))/(sum(rows.filter(r=>participants.has(r.fabricante)))||1))-.30,'Diferencia entre la participación de Clarasol dentro de los participantes y el objetivo de 30%.'],
-      semester:['Avance Jul–Dic',eligible/goals.metaSemestre,'El segundo semestre apenas contiene julio al corte; la meta oficial permanece fija.'],
-      units:['Unidades vendidas',sum(rows,'cantidad'),'Cantidad vendida bajo los filtros seleccionados.']
-    };
+    const rows=julyRows(2026);
+    const totalCategory=sum(rows);
+    const contestRows=rows.filter(r=>participants.has(r.fabricante));
+    const contestSales=sum(contestRows);
+    const target=targetContext();
+    const currentDaily=contestSales/goals.cutoff.day;
+    const projectedClose=currentDaily*goals.cutoff.daysInMonth;
+    const requiredDaily=target.target===null?0:Math.max(target.target-contestSales,0)/Math.max(daysRemaining,1);
+
+    const actualByMaker = ['ALEN','CLARASOL','CLOROX','VALENCIANA'].map(m=>({
+      maker:m,
+      value:sum(rows.filter(r=>r.fabricante===m))
+    }));
+
+    const makerActualRows = (list, denominator) => list
+      .filter(x=>x.value>0)
+      .map(x=>`<div class="drawer-row"><span>${x.maker}</span><strong>${fmt(x.value)} · ${pct(denominator?x.value/denominator:0)}</strong></div>`)
+      .join('');
+
+    if(type==='category'){
+      openDrawer('Venta total de la categoría',`
+        <div class="drawer-definition">Es la venta real acumulada al 23 de julio e incluye Alen, Clarasol, Clorox y Valenciana.</div>
+        <div class="drawer-hero"><span>Venta real al corte</span><strong>${fmt(totalCategory)}</strong><small>No es una proyección</small></div>
+        <h3 class="drawer-section-title">Distribución real por fabricante</h3>
+        <div class="drawer-list">${makerActualRows(actualByMaker,totalCategory)}</div>
+        <h3 class="drawer-section-title">Principales vendedores</h3>
+        <div class="drawer-list">${breakdownRows(rows,'vendedor')}</div>`);
+      return;
+    }
+
+    if(type==='eligible'){
+      const contestMakers=actualByMaker.filter(x=>participants.has(x.maker));
+      openDrawer('Venta del concurso al 23 de julio',`
+        <div class="drawer-definition">Es la venta real de Alen, Clarasol y Clorox. Valenciana aparece en la categoría, pero no suma a esta meta.</div>
+        <div class="drawer-hero"><span>Venta real al corte</span><strong>${fmt(contestSales)}</strong><small>${pct(totalCategory?contestSales/totalCategory:0)} de la categoría</small></div>
+        <h3 class="drawer-section-title">Distribución real de la venta del concurso</h3>
+        <div class="drawer-list">${makerActualRows(contestMakers,contestSales)}</div>
+        <h3 class="drawer-section-title">Principales vendedores</h3>
+        <div class="drawer-list">${breakdownRows(contestRows,'vendedor')}</div>`);
+      return;
+    }
+
+    if(type==='expected'){
+      const expectedRows=goals.participantes.map(m=>{
+        const expected=goals.metaMensualFabricante[m]*dayRatio;
+        const actual=sum(rows.filter(r=>r.fabricante===m));
+        return `<div class="drawer-comparison">
+          <div><strong>${m}</strong><small>Esperado ${fmt(expected)}</small></div>
+          <div><span>Real ${fmt(actual)}</span><b class="${actual>=expected?'ok':'bad'}">${pct(expected?actual/expected:0)}</b></div>
+        </div>`;
+      }).join('');
+      openDrawer('Venta esperada al 23 de julio',`
+        <div class="drawer-definition">Es la parte de la meta mensual que debería estar vendida después de 23 de los 31 días de julio.</div>
+        <div class="drawer-hero"><span>Meta proporcional al corte</span><strong>${target.expected===null?'No aplica':fmt(target.expected)}</strong><small>Venta real: ${fmt(contestSales)}</small></div>
+        <h3 class="drawer-section-title">Esperado vs real por fabricante</h3>
+        <div class="drawer-comparison-list">${expectedRows}</div>`);
+      return;
+    }
+
+    if(type==='daily'){
+      const dailyRows=goals.participantes.map(m=>{
+        const actual=sum(rows.filter(r=>r.fabricante===m));
+        const remaining=Math.max(goals.metaMensualFabricante[m]-actual,0);
+        const perDay=remaining/Math.max(daysRemaining,1);
+        return `<div class="drawer-row"><span>${m}</span><strong>${fmt(perDay)} diarios</strong></div>`;
+      }).join('');
+      openDrawer('Venta diaria necesaria',`
+        <div class="drawer-definition">Es el promedio que debe venderse cada día del 24 al 31 de julio para completar la meta mensual.</div>
+        <div class="drawer-hero"><span>Necesario por día</span><strong>${target.target===null?'No aplica':fmt(requiredDaily)}</strong><small>Quedan ${daysRemaining} días</small></div>
+        <div class="drawer-list">
+          <div class="drawer-row"><span>Ritmo diario actual</span><strong>${fmt(currentDaily)}</strong></div>
+          <div class="drawer-row"><span>Venta pendiente del mes</span><strong>${target.target===null?'No aplica':fmt(Math.max(target.target-contestSales,0))}</strong></div>
+        </div>
+        <h3 class="drawer-section-title">Necesario por fabricante</h3>
+        <div class="drawer-list">${dailyRows}</div>`);
+      return;
+    }
+
+    if(type==='projection'){
+      const projectionRows=goals.participantes.map(m=>{
+        const actual=sum(rows.filter(r=>r.fabricante===m));
+        const projection=actual/goals.cutoff.day*goals.cutoff.daysInMonth;
+        return `<div class="drawer-row"><span>${m}</span><strong>${fmt(projection)}</strong></div>`;
+      }).join('');
+      openDrawer('Proyección de cierre al 31 de julio',`
+        <div class="drawer-definition">Es una estimación, no la venta actual. Se calcula manteniendo el promedio diario observado al 23 de julio.</div>
+        <div class="drawer-hero"><span>Cierre estimado</span><strong>${fmt(projectedClose)}</strong><small>Venta real al corte: ${fmt(contestSales)}</small></div>
+        <div class="drawer-list">
+          <div class="drawer-row"><span>Promedio diario actual</span><strong>${fmt(currentDaily)}</strong></div>
+          <div class="drawer-row"><span>Meta mensual</span><strong>${target.target===null?'No aplica':fmt(target.target)}</strong></div>
+          <div class="drawer-row"><span>Proyección vs meta</span><strong>${target.target===null?'No aplica':pct(projectedClose/target.target)}</strong></div>
+        </div>
+        <h3 class="drawer-section-title">Proyección por fabricante</h3>
+        <div class="drawer-list">${projectionRows}</div>`);
+      return;
+    }
+
+    if(type==='valenciana'){
+      const val=sum(rows.filter(r=>r.fabricante==='VALENCIANA'));
+      openDrawer('Participación de Valenciana',`
+        <div class="drawer-definition">Valenciana se incluye para mostrar la categoría completa, pero no tiene meta dentro del concurso.</div>
+        <div class="drawer-hero"><span>Peso dentro de la categoría</span><strong>${pct(totalCategory?val/totalCategory:0)}</strong><small>Venta real ${fmt(val)}</small></div>
+        <h3 class="drawer-section-title">Principales vendedores</h3>
+        <div class="drawer-list">${breakdownRows(rows.filter(r=>r.fabricante==='VALENCIANA'),'vendedor')}</div>`);
+      return;
+    }
+
+    if(type==='mixgap'){
+      const clarasol=sum(rows.filter(r=>r.fabricante==='CLARASOL'));
+      const realShare=contestSales?clarasol/contestSales:0;
+      openDrawer('Participación de Clarasol',`
+        <div class="drawer-definition">La participación se calcula únicamente dentro de Alen, Clarasol y Clorox.</div>
+        <div class="drawer-hero"><span>Participación actual</span><strong>${pct(realShare)}</strong><small>Objetivo 30%</small></div>
+        <div class="drawer-list">
+          <div class="drawer-row"><span>Diferencia contra objetivo</span><strong>${pp(realShare-.30)}</strong></div>
+          <div class="drawer-row"><span>Venta Clarasol</span><strong>${fmt(clarasol)}</strong></div>
+          <div class="drawer-row"><span>Venta total del concurso</span><strong>${fmt(contestSales)}</strong></div>
+        </div>`);
+      return;
+    }
+
     if(type==='growth'){
       const cur=periodRows(state.period), prev=comparableRows(state.period), growth=sum(prev)?sum(cur)/sum(prev)-1:null;
-      openDrawer('Variación comparable',`<div class="drawer-hero"><span>${periodLabel()}</span><strong>${growth===null?'—':pct(growth)}</strong></div><p class="drawer-note">Compara el mismo periodo disponible de 2026 contra 2025. Julio 2026 se proyecta por separado cuando se analiza ritmo.</p>`);return;
+      openDrawer('Variación contra 2025',`
+        <div class="drawer-definition">Compara la venta del periodo seleccionado contra el mismo periodo de 2025.</div>
+        <div class="drawer-hero"><span>${periodLabel()}</span><strong>${growth===null?'Sin base':pct(growth)}</strong></div>`);
+      return;
     }
-    const [title,value,note]=definitions[type]||definitions.category;
-    const display=(type==='mixgap'||type==='semester')?pct(value):type==='units'?number(value):fmt(value);
-    openDrawer(title,`<div class="drawer-hero"><span>${contextLabel()}</span><strong>${display}</strong></div><p class="drawer-note">${note}</p><p class="drawer-note">Por fabricante</p><div class="drawer-list">${makerBreakdown}</div><p class="drawer-note">Principales vendedores</p><div class="drawer-list">${sellerBreakdown}</div>`);
+
+    if(type==='semester'){
+      openDrawer('Avance de la meta julio–diciembre',`
+        <div class="drawer-definition">La meta semestral es fija y el avance actual corresponde a la venta del concurso registrada en julio al corte.</div>
+        <div class="drawer-hero"><span>Avance actual</span><strong>${pct(contestSales/goals.metaSemestre)}</strong><small>${fmt(contestSales)} de ${fmt(goals.metaSemestre)}</small></div>`);
+      return;
+    }
+
+    if(type==='units'){
+      openDrawer('Unidades vendidas',`
+        <div class="drawer-definition">Cantidad real vendida con los filtros seleccionados.</div>
+        <div class="drawer-hero"><span>Unidades al corte</span><strong>${number(sum(rows,'cantidad'))}</strong><small>Venta ${fmt(totalCategory)}</small></div>`);
+      return;
+    }
+
+    openGenericDetail('category');
   }
 
   function showSection(section){
@@ -517,11 +731,11 @@
     $(`${section}Section`)?.classList.add('active-section');
     document.querySelectorAll('[data-section]').forEach(x=>x.classList.toggle('active',x.dataset.section===section));
     const headers={
-      pressure:['TABLERO DE SUPERVISIÓN','Presión comercial inmediata','Qué falta, quién debe reaccionar y dónde está la oportunidad.'],
-      mix:['MEZCLA DE CATEGORÍA','Peso de fabricantes','Venta, share, migración y cumplimiento de la mezcla objetivo.'],
-      team:['EJECUCIÓN COMERCIAL','Fuerza de ventas','Quién mueve el negocio y quién necesita intervención.'],
-      products:['PORTAFOLIO','Productos que explican la venta','El detalle suficiente para convertir lectura en acción.'],
-      direction:['DIRECCIÓN COMERCIAL','Control analítico completo','Histórico 2025, YTD 2026, metas, tendencias y detalle.']
+      pressure:['RESULTADOS AL CORTE','Resumen comercial al 23 de julio','Venta real, venta esperada, proyección y seguimiento por fabricante.'],
+      mix:['PARTICIPACIÓN POR FABRICANTE','Distribución de la venta','Venta y peso de cada fabricante dentro de la categoría.'],
+      team:['RESULTADOS POR VENDEDOR','Venta y participación del equipo','Resultado al corte por vendedor y participación de Clarasol.'],
+      products:['RESULTADOS POR PRODUCTO','Venta del portafolio','Productos con mayor venta y variación contra julio de 2025.'],
+      direction:['ANÁLISIS GENERAL','Histórico, metas y tendencia','Comparativos 2025–2026 y detalle por fabricante.']
     }[section];
     $('headerEyebrow').textContent=headers[0];$('headerTitle').textContent=headers[1];$('headerSubtitle').textContent=headers[2];
     window.scrollTo({top:0,behavior:'smooth'});
@@ -536,7 +750,7 @@
     $('loginView').classList.add('hidden');$('appView').classList.remove('hidden');
     $('roleLabel').textContent=account.label;$('profileName').textContent=account.name;$('profileInitial').textContent=account.name.charAt(0);
     document.querySelectorAll('.director-only').forEach(el=>el.classList.toggle('hidden',account.role!=='direccion'));
-    state.period='jul26';showSection(account.role==='alicia'?'pressure':'direction');renderAll();
+    state.period='jul26';showSection('pressure');renderAll();
   }
 
   function logout(){
