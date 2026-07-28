@@ -17,7 +17,7 @@
         <div class="brand-mark">BG</div>
         <div><span>Bodega La Guadalupana</span><strong>Blanqueadores</strong></div>
       </div>
-      <span class="login-kicker">DASHBOARD COMERCIAL · CORTE 23 JUL 2026</span>
+      <span id="loginKicker" class="login-kicker">DASHBOARD COMERCIAL · CORTE</span>
       <h1>Acceso al dashboard comercial</h1>
       <p>Consulta ventas, metas, participación por fabricante y resultados del equipo.</p>
       <label class="field"><span>Usuario</span><input id="userInput" autocomplete="username" placeholder="Usuario"></label>
@@ -43,7 +43,7 @@
       </nav>
       <div class="side-status">
         <span class="status-dot"></span>
-        <div><strong>Información al día vencido</strong><small>23 de julio de 2026</small></div>
+        <div><strong>Información al día vencido</strong><small id="sideCutoff">Corte actualizado</small></div>
       </div>
     </aside>
 
@@ -51,11 +51,11 @@
       <header class="topbar">
         <div>
           <p class="eyebrow" id="headerEyebrow">RESULTADOS AL CORTE</p>
-          <h1 id="headerTitle">Resumen comercial al 23 de julio</h1>
+          <h1 id="headerTitle">Resumen comercial al corte</h1>
           <p id="headerSubtitle">Venta real, meta, proyección y distribución por fabricante.</p>
         </div>
         <div class="top-actions">
-          <span class="cut-chip"><i></i> Corte 23 jul · 23/31 días</span>
+          <span id="cutChip" class="cut-chip"><i></i> Corte actualizado</span>
           <button id="profileBtn" class="profile-btn" type="button"><span id="profileInitial">C</span><b id="profileName">Clarisa</b></button>
           <button id="logoutBtn" class="icon-btn" type="button" aria-label="Cerrar sesión">↪</button>
         </div>
@@ -64,10 +64,7 @@
       <section class="filters glass" aria-label="Filtros">
         <div class="filters-intro"><span>⌁</span><div><strong>Filtros de lectura</strong><small>La selección actualiza toda la información</small></div></div>
         <label class="director-only"><span>Periodo</span><select id="periodFilter">
-          <option value="jul26">Julio 2026 al día 23</option>
-          <option value="ytd26">YTD enero–julio 2026</option>
-          <option value="year25">Año completo 2025</option>
-          <option value="compare">Comparativo ene–jul</option>
+          <option value="">Cargando periodo…</option>
         </select></label>
         <label><span>Fabricante</span><select id="manufacturerFilter"></select></label>
         <label><span>Grupo</span><select id="groupFilter"></select></label>
@@ -78,7 +75,7 @@
 
       <section id="pressureSection" class="app-section active-section">
         <div class="section-heading">
-          <div><p class="eyebrow">RESUMEN AL 23 DE JULIO</p><h2>Venta actual, meta y proyección</h2></div>
+          <div><p id="pressureEyebrow" class="eyebrow">RESUMEN AL CORTE</p><h2>Venta actual, meta y proyección</h2></div>
           <span id="pressureState" class="state-badge danger">Requiere atención</span>
         </div>
 
@@ -90,7 +87,7 @@
             <div class="progress"><i id="kpiEligibleBar"></i></div>
           </button>
           <button class="kpi-card clickable" type="button" data-detail="expected">
-            <span class="kpi-label">Venta esperada al 23 de julio</span>
+            <span id="kpiExpectedLabel" class="kpi-label">Venta esperada al corte</span>
             <strong id="kpiExpected">$0</strong>
             <small id="kpiExpectedNote">Meta mensual proporcional a 23 días</small>
             <span id="kpiGapBadge" class="delta-badge negative">Brecha $0</span>
@@ -98,11 +95,11 @@
           <button class="kpi-card clickable" type="button" data-detail="daily">
             <span class="kpi-label">Venta diaria necesaria</span>
             <strong id="kpiDaily">$0</strong>
-            <small>Promedio requerido del 24 al 31 de julio</small>
+            <small id="kpiDailyNote">Promedio requerido para completar el mes</small>
             <span id="kpiDailyVs" class="delta-badge">vs ritmo actual</span>
           </button>
           <button class="kpi-card highlight clickable" type="button" data-detail="projection">
-            <span class="kpi-label">Proyección de cierre de julio</span>
+            <span id="kpiProjectionLabel" class="kpi-label">Proyección de cierre mensual</span>
             <strong id="kpiProjection">$0</strong>
             <small id="kpiProjectionNote">Estimación con el ritmo actual</small>
             <span id="kpiProjectionBadge" class="delta-badge negative">0% de meta</span>
@@ -148,7 +145,7 @@
           <button class="kpi-card clickable" type="button" data-detail="mixgap"><span class="kpi-label">Brecha de Clarasol</span><strong id="mixGap">0 pp</strong><small>Clarasol vs 30% objetivo</small></button>
         </div>
         <article class="panel share-panel">
-          <div class="panel-head"><div><p class="eyebrow">DISTRIBUCIÓN ACTUAL</p><h3>Venta y peso de cada fabricante</h3></div><span id="sharePeriod" class="soft-chip">Julio 2026</span></div>
+          <div class="panel-head"><div><p class="eyebrow">DISTRIBUCIÓN ACTUAL</p><h3>Venta y peso de cada fabricante</h3></div><span id="sharePeriod" class="soft-chip">Mes actual</span></div>
           <div id="shareStack" class="share-stack" aria-label="Participación por fabricante"></div>
           <div id="manufacturerGrid" class="manufacturer-grid"></div>
         </article>
@@ -201,7 +198,7 @@
       <section id="directionSection" class="app-section director-only">
         <div class="section-heading">
           <div><p class="eyebrow">ANÁLISIS EJECUTIVO</p><h2>Contexto, tendencia y causas</h2></div>
-          <span id="directionPeriod" class="soft-chip">Julio 2026</span>
+          <span id="directionPeriod" class="soft-chip">Periodo actual</span>
         </div>
         <div class="kpi-grid compact-kpis">
           <button class="kpi-card clickable" type="button" data-detail="category"><span class="kpi-label">Venta seleccionada</span><strong id="dirSales">$0</strong><small id="dirSalesNote">Venta SubTotal</small></button>
@@ -211,7 +208,7 @@
         </div>
         <div class="two-col direction-main">
           <article class="panel chart-panel">
-            <div class="panel-head"><div><p class="eyebrow">TENDENCIA</p><h3>2025 vs 2026 por mes</h3></div><div id="chartLegend" class="legend"></div></div>
+            <div class="panel-head"><div><p class="eyebrow">TENDENCIA</p><h3 id="trendTitle">Comparativo mensual</h3></div><div id="chartLegend" class="legend"></div></div>
             <svg id="trendChart" viewBox="0 0 820 330" role="img" aria-label="Tendencia mensual de venta"></svg>
           </article>
           <article class="panel">
@@ -220,15 +217,15 @@
           </article>
         </div>
         <details class="technical-details">
-          <summary><span><b>Detalle técnico por fabricante</b><small>2025, YTD 2026 y julio al corte</small></span><i>Ver detalle</i></summary>
+          <summary><span><b>Detalle técnico por fabricante</b><small id="technicalDetailLabel">Histórico, YTD y mes al corte</small></span><i>Ver detalle</i></summary>
           <article class="panel detail-table-panel">
             <div class="panel-head"><div><p class="eyebrow">DETALLE TÉCNICO</p><h3>Cifras de soporte para Dirección</h3></div><button id="downloadCsvBtn" class="secondary-btn" type="button">Descargar CSV</button></div>
-            <div class="table-wrap"><table><thead><tr><th>Fabricante</th><th>2025</th><th>YTD 2026</th><th>Jul-25</th><th>Jul-26</th><th>Participación Jul-26</th><th>Meta Jul</th><th>Cumplimiento</th></tr></thead><tbody id="manufacturerTableBody"></tbody></table></div>
+            <div class="table-wrap"><table><thead><tr><th>Fabricante</th><th id="tablePriorYear">Año anterior</th><th id="tableYtd">YTD actual</th><th id="tablePriorMonth">Mes anterior</th><th id="tableCurrentMonth">Mes actual</th><th id="tableCurrentShare">Participación actual</th><th id="tableCurrentGoal">Meta mensual</th><th>Cumplimiento</th></tr></thead><tbody id="manufacturerTableBody"></tbody></table></div>
           </article>
         </details>
       </section>
 
-      <footer>Fuente: Concurso_Clarasol(4).xlsx · Venta SubTotal · Bodega La Guadalupana · Corte al 23 de julio de 2026</footer>
+      <footer id="dataFooter">Fuente: Concurso_Clarasol.xlsx · Venta SubTotal · Bodega La Guadalupana</footer>
     </main>
 
     <nav class="mobile-nav" aria-label="Navegación móvil">
