@@ -185,12 +185,10 @@
     const projectedProgress = target.target ? projectedClose/target.target : null;
     const gapToDate = target.expected===null ? null : target.expected-contestSales;
 
-    $('kpiEligible').textContent = fmt(contestSales);
+    $('kpiEligible').textContent = fmt(total);
     $('kpiEligibleNote').textContent = state.manufacturer==='VALENCIANA'
-      ? 'Venta de Valenciana; se muestra fuera de la meta'
-      : hasDimensionalFilter()
-        ? 'Venta real de la selección dentro de Alen, Clarasol y Clorox'
-        : 'Venta real de Alen + Clarasol + Clorox';
+      ? 'Valenciana es referencia de categoría y no acredita la meta'
+      : `Venta válida para el concurso: ${fmt(contestSales)}${hasDimensionalFilter()?'':' · Valenciana no acredita meta'}`;
     $('kpiEligibleBar').style.width = `${Math.min((expectedProgress||0)*100,100)}%`;
 
     $('kpiExpected').textContent = target.expected===null ? 'Sin meta' : fmt(target.expected);
@@ -238,7 +236,7 @@
       headlineTitle = `La venta del concurso cumple el nivel esperado al día ${goals.cutoff.day}.`;
       headlineText = `Clarasol representa ${pct(clarasolMix)} de la venta del concurso frente al 30% objetivo.`;
     } else {
-      headlineTitle = `Venta real ${fmt(contestSales)} frente a ${fmt(target.expected)} esperados al día ${goals.cutoff.day}.`;
+      headlineTitle = `Venta válida del concurso ${fmt(contestSales)} frente a ${fmt(target.expected)} esperados al día ${goals.cutoff.day}.`;
       headlineText = `Faltan ${fmt(Math.max(target.expected-contestSales,0))} para estar al ritmo del corte. La proyección de ${currentMonthLower} es ${fmt(projectedClose)}.`;
     }
     $('actionHeadline').innerHTML=`<strong>${headlineTitle}</strong><span>${headlineText}${hasDimensionalFilter()?' La selección muestra su aporte; la meta continúa siendo global.':''}</span>`;
@@ -633,6 +631,7 @@
     const totalCategory=sum(rows);
     const contestRows=rows.filter(r=>participants.has(r.fabricante));
     const contestSales=sum(contestRows);
+    const valencianaSales=sum(rows.filter(r=>r.fabricante==='VALENCIANA'));
     const target=targetContext();
     const currentDaily=contestSales/goals.cutoff.day;
     const projectedClose=currentDaily*goals.cutoff.daysInMonth;
@@ -651,7 +650,11 @@
     if(type==='category'){
       openDrawer('Venta total de la categoría',`
         <div class="drawer-definition">Es la venta real acumulada al ${cutoffDateLabel} e incluye Alen, Clarasol, Clorox y Valenciana.</div>
-        <div class="drawer-hero"><span>Venta real al corte</span><strong>${fmt(totalCategory)}</strong><small>No es una proyección</small></div>
+        <div class="drawer-hero"><span>Venta total de la categoría</span><strong>${fmt(totalCategory)}</strong><small>No es una proyección</small></div>
+        <div class="drawer-list">
+          <div class="drawer-row"><span>Venta válida para el concurso</span><strong>${fmt(contestSales)}</strong></div>
+          <div class="drawer-row"><span>Valenciana · referencia fuera de meta</span><strong>${fmt(valencianaSales)}</strong></div>
+        </div>
         <h3 class="drawer-section-title">Distribución real por fabricante</h3>
         <div class="drawer-list">${makerActualRows(actualByMaker,totalCategory)}</div>
         <h3 class="drawer-section-title">Principales vendedores</h3>
